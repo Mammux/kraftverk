@@ -192,8 +192,9 @@ def mainLoop():
         #       om det er nye arduinoer som er koblet til / koblet fra
         
         while True:
-                msg = c.receive()
-                handleMessage(msg)
+                for c in msgs:
+                        msg = c.receive()
+                        handleMessage(msg)
                 stateCommands(msgs)
 
 mainLoop()
