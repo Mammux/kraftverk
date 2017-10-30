@@ -50,27 +50,51 @@ water = 255 # 0 to 255 "Water pressure", currently not connected to anything but
 
 def stateCommands(msgs):
         if (transformer_on):
+#if defined(DEBUG)
+                print("transformer on");
+#endif        
                 [msg.send("light_on", 0) for msg in msgs]
                 [msg.send("light_off", 1) for msg in msgs]
         else:
+#if defined(DEBUG)
+                print("transformer off");
+#endif        
                 [msg.send("light_on", 1) for msg in msgs]
                 [msg.send("light_off", 0) for msg in msgs]
                 
         if (generator_on):
+#if defined(DEBUG)
+                print("generator on");
+#endif        
                 [msg.send("light_on", 2) for msg in msgs]
                 [msg.send("light_off", 3) for msg in msgs]
         else:
+#if defined(DEBUG)
+                print("generator off");
+#endif        
                 [msg.send("light_on", 2) for msg in msgs]
                 [msg.send("light_off", 3) for msg in msgs]
         
         if (ac_on):
                 [msg.send("engage_dc_volt") for msg in msgs]
+#if defined(DEBUG)
+                print("ac_on");
+#endif        
         else:
                 [msg.send("disengage_dc_volt") for msg in msgs]
+#if defined(DEBUG)
+                print("ac_off");
+#endif        
                         
         [msg.send("set_vfd", dc_level) for msg in msgs]
+#if defined(DEBUG)
+        print("set_vfd {}".format(dc_level));
+#endif        
         
         [msg.send("set_hz", freq) for msg in msgs]
+#if defined(DEBUG)
+        print("set_hz {}".format(freq));
+#endif        
 
         hydro_snd.set_volume(min(dc_level, water)/255)        
         waterfall_snd.set_volume(255 / water);
