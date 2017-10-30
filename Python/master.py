@@ -119,7 +119,10 @@ def handleMessage(msg):
         
 #if defined(DEBUG)
         print("handleMessage: {}".format(str(msg)))
-#endif        
+#endif
+        if msg == None:
+                return;
+        
         if msg[0] == "error":
                 print("Error: {}\n".format(msg[1]))
         elif msg[0] == "id":
