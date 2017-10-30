@@ -147,23 +147,23 @@ def mainLoop():
         pygame.mixer.init(frequency=44100, size=-16, channels=5, buffer=4096)
         hydro_snd = pygame.mixer.Sound("sounds/hydroelectric_loop.wav")
         hydro_snd.set_volume(0.0)
-        hydro_snd.play(loop=-1)
+        hydro_snd.play(loops=-1)
         
         creaking_snd = pygame.mixer.Sound("sounds/creaking_loop.wav")
         creaking_snd.set_volume(0.0)
-        creaking_snd.play(loop=-1)
+        creaking_snd.play(loops=-1)
 
         dam_snd = pygame.mixer.Sound("sounds/damsounds_loop.wav")
         dam_snd.set_volume(0.0)
-        dam_snd.play(loop=-1)
+        dam_snd.play(loops=-1)
 
         waterfall_snd = pygame.mixer.Sound("sounds/waterfall_loop.wav")
         waterfall_snd.set_volume(0.0)
-        waterfall_snd.play(loop=-1)
+        waterfall_snd.play(loops=-1)
 
         waterpipe_snd = pygame.mixer.Sound("sounds/waterpipe_loop.wav")
         waterpipe_snd.set_volume(0.0)
-        waterpipe_snd.play(loop=-1)
+        waterpipe_snd.play(loops=-1)
 
         stateCommands(msgs)
 
