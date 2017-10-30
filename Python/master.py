@@ -5,6 +5,8 @@ import pygame
 import time
 from time import sleep
 
+#define DEBUG true
+
 hydro_snd = None
 creaking_snd = None
 dam_snd = None
@@ -19,8 +21,8 @@ commands = [["error", ""],
 	["light_off", "i"],		
 	["engage_DC_volt", ""],		
 	["disengage_DC_volt", ""],
-	["engage_DC_ampere", ""],	
-	["disengage_DC_ampere", ""],	
+	["engage_DC_amp", ""],	
+	["disengage_DC_amp", ""],	
 	["set_vfd", "i"],
         ["set_hz", "i"]]
 
@@ -79,6 +81,9 @@ def stateCommands(msgs):
                 waterpipe_snd.set_volume(0.2)
 
 def handleMessage(msg):
+#if defined(DEBUG)
+        print("handleMessage: {}".format(str(msg)))
+#endif        
         if msg[0] == "error":
                 print("Error: {}\n".format(msg[1]))
         elif msg[0] == "id":
