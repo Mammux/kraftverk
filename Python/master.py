@@ -193,6 +193,9 @@ def mainLoop():
         
         while True:
                 for c in msgs:
+#ifdef DEBUG
+                        print("c: {}".format(str(c)))
+#endif
                         msg = c.receive()
                         handleMessage(msg)
                 stateCommands(msgs)
