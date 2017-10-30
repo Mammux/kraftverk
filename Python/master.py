@@ -49,6 +49,12 @@ water = 255 # 0 to 255 "Water pressure", currently not connected to anything but
 # waterfall_snd = None
 
 def stateCommands(msgs):
+        global hydro_snd
+        global creaking_snd
+        global dam_snd
+        global waterfall_snd
+        global waterpipe_snd
+        
         if (transformer_on):
 #if defined(DEBUG)
                 print("transformer on");
@@ -105,6 +111,12 @@ def stateCommands(msgs):
                 waterpipe_snd.set_volume(0.2)
 
 def handleMessage(msg):
+        global hydro_snd
+        global creaking_snd
+        global dam_snd
+        global waterfall_snd
+        global waterpipe_snd
+        
 #if defined(DEBUG)
         print("handleMessage: {}".format(str(msg)))
 #endif        
@@ -142,6 +154,12 @@ def handleMessage(msg):
                         water = max(0,min(255,water+pos))
 
 def mainLoop():
+        global hydro_snd
+        global creaking_snd
+        global dam_snd
+        global waterfall_snd
+        global waterpipe_snd
+        
         msgs = getMessengers()
         
         pygame.mixer.init(frequency=44100, size=-16, channels=5, buffer=4096)
