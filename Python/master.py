@@ -56,7 +56,7 @@ def stateCommands(msgs):
         global waterpipe_snd
         
         if (transformer_on):
-#if defined(DEBUG)
+#ifdef DEBUG
                 print("transformer on");
 #endif        
                 [msg.send("light_on", 0) for msg in msgs]
