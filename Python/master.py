@@ -127,7 +127,7 @@ def handleMessage(msg):
                                 hz_snd.fadeout();
                         transformer_on = False
                 elif btn == 1: # venstre inn
-                        if (!transformer_on):
+                        if (not transformer_on):
                                 hz_snd.play(fade_ms=1);
                         transformer_on = True
                 elif btn == 2: # høyre ut
