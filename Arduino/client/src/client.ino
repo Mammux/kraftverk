@@ -235,7 +235,9 @@ void loop()
 #endif
   
 #if defined(BUTTON_ARDUINO)
-  cmdMessenger.sendCmd(id, 1);
+  cmdMessenger.sendCmdStart(id);
+  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
+  cmdMessenger.sendCmdEnd();
   handleButton(A0, 3, false);
   handleButton(A1, 2, true);
   handleButton(A2, 0, false);
@@ -243,7 +245,9 @@ void loop()
 #endif
 
 #if defined(CONTROLS_ARDUINO)
-  cmdMessenger.sendCmd(id, 2);
+  cmdMessenger.sendCmdStart(id);
+  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)2);
+  cmdMessenger.sendCmdEnd();
   handleCtrls();
 #endif
 
@@ -252,10 +256,15 @@ void loop()
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
   // HÃ¥pet er at dette sÃ¸mlÃ¸st gÃ¥r over RS485
-    cmdMessenger.sendCmd(control_pos, 4, newPosition - oldPosition);
+    cmdMessenger.sendCmdStart(control_pos);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)4);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)newPosition - oldPosition);
+    cmdMessenger.sendCmdEnd();
     oldPosition = newPosition;
   }
 #endif
+
+// Må erstatte dette med noe som følger med på hvor lenge det er siden vi sist sendte "status"
 
 #if defined(BUTTONS_ARDUINO) || defined(CONTROLS_ARDUINO)
   delay(1000);
