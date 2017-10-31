@@ -185,7 +185,7 @@ void updateMsgs()
 {
 #if defined(BUTTON_ARDUINO)
   cmdMessenger.sendCmdStart(id);
-  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
+  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdEnd();
   delay(500);
   handleButton(A0, 3, false);
@@ -200,7 +200,7 @@ void updateMsgs()
 
 #if defined(CONTROLS_ARDUINO)
   cmdMessenger.sendCmdStart(id);
-  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)2);
+  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)2);
   cmdMessenger.sendCmdEnd();
   handleCtrls();
 #endif
@@ -260,7 +260,7 @@ void handleButton(uint16_t pin, uint16_t button, bool high)
   int val = analogRead(pin);
   if ((val > 512 & high) || (val < 512 & !high)) {
     cmdMessenger.sendCmdStart(button_pressed);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)button);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)button);
     cmdMessenger.sendCmdEnd();
   }
 }
@@ -274,19 +274,19 @@ void handleCtrls()
   int c_1_b = analogRead(A2);
   if (c_1_a > 512 & c_1_b > 512) {
     cmdMessenger.sendCmdStart(control_pos);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
     cmdMessenger.sendCmdEnd();
 
   } else if (c_1_a < 512) {
     cmdMessenger.sendCmdStart(control_pos);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)2);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)2);
     cmdMessenger.sendCmdEnd();
   } else {
     cmdMessenger.sendCmdStart(control_pos);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
     cmdMessenger.sendCmdEnd();
   }
 }
@@ -304,8 +304,8 @@ void loop()
   if (newPosition != oldPosition) {
   // Håpet er at dette sømløst går over RS485
     cmdMessenger.sendCmdStart(control_pos);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)4);
-    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)newPosition - oldPosition);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)4);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)newPosition - oldPosition);
     cmdMessenger.sendCmdEnd();
     oldPosition = newPosition;
   }
