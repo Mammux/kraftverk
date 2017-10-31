@@ -103,8 +103,8 @@ def stateCommands(msgs):
         if __debug__:
                 print("set_hz {}".format(freq));
 
-        hydro_snd.set_volume(min(dc_level, water)/255)        
-        waterfall_snd.set_volume(255 / water);
+#        hydro_snd.set_volume(min(dc_level, water)/255)        
+#        waterfall_snd.set_volume(255 / water);
 
         if (water > 50 | water == 0):
                 waterpipe_snd.set_volume(0.0)
