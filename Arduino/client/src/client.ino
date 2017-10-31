@@ -1,13 +1,13 @@
 #include <CmdMessenger.h>  // CmdMessenger
 
-// #define LIGHT_ARDUINO // OK
-// #define BUTTON_ARDUINO // OK
+#define LIGHT_ARDUINO // OK
+#define BUTTON_ARDUINO // OK
 // #define CONTROLS_ARDUINO // OK
 // #define WATER_ARDUINO // OK
 // #define VFD_ARDUINO // OK
 // #define HZ_ARDUINO // OK
-// #define DC_VOLT_ARDUINO // OK
-// #define DC_AMP_ARDUINO // OK
+#define DC_VOLT_ARDUINO // OK
+#define DC_AMP_ARDUINO // OK
 
 #if defined(WATER_ARDUINO)
 #include <SoftwareSerial.h>
