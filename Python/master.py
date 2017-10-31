@@ -36,8 +36,8 @@ def getMessengers():
 
 transformer_on = True
 generator_on = True
-ac_on = True
-dc_level = 255 # From 0 (unpowered) to 255 (max capacity)
+dc_on = True
+ac_level = 255 # From 0 (unpowered) to 255 (max capacity)
 freq = 55
 adj_res = 0 # 0 to 255 "Innstillingsmotstand", currently not connected
 shunt = 0 # 0 to 255 "Shunt", currently not connected
@@ -53,8 +53,8 @@ def stateCommands(msgs):
 
         global transformer_on 
         global generator_on 
-        global ac_on 
-        global dc_level
+        global dc_on 
+        global ac_level
         global freq
         global adj_res
         global shunt
@@ -82,27 +82,27 @@ def stateCommands(msgs):
                 [msg.send("light_on", 3) for msg in msgs]
                 [msg.send("light_off", 2) for msg in msgs]
         
-        if (ac_on):
+        if (dc_on):
                 [msg.send("engage_dc_volt") for msg in msgs]
                 if __debug__:
-                        print("ac_on");
+                        print("dc_on");
         else:
                 [msg.send("disengage_dc_volt") for msg in msgs]
                 if __debug__:
-                        print("ac_off");
+                        print("dc_off");
                         
-        [msg.send("set_vfd", dc_level) for msg in msgs]
+        [msg.send("set_vfd", ac_level) for msg in msgs]
         if __debug__:
-                print("set_vfd {}".format(dc_level));
+                print("set_vfd {}".format(ac_level));
         
         [msg.send("set_hz", freq) for msg in msgs]
         if __debug__:
                 print("set_hz {}".format(freq));
 
-        hydro_snd.set_volume(min(dc_level, water)/255)        
+        hydro_snd.set_volume(min(ac_level, water)/255)        
         waterfall_snd.set_volume(255 / water);
 
-        if (water > 50 | water == 0):
+        if (water > 50 or water == 0):
                 waterpipe_snd.set_volume(0.0)
         else:
                 waterpipe_snd.set_volume(0.2)
@@ -117,8 +117,8 @@ def handleMessage(msg):
 
         global transformer_on 
         global generator_on 
-        global ac_on 
-        global dc_level
+        global dc_on 
+        global ac_level
         global freq
         global adj_res
         global shunt
@@ -153,11 +153,11 @@ def handleMessage(msg):
                 pos = msg[1][1]
                 if ctrl == 0: # Turbinregulator
                         if pos == 0: # synker
-                                dc_level = max(dc_level-10, 0)
+                                ac_level = max(ac_level-10, 0)
                         elif pos == 1: # nøytral
                                 True # nop
                         elif pos == 2: # stiger
-                                dc_level = min(dc_level+10, 255)
+                                ac_level = min(ac_level+10, 255)
                 elif ctrl == 1: # Instillingsmotstand
                         adj_res = pos
                 elif ctrl == 2:
@@ -204,7 +204,7 @@ def mainLoop():
 
         stateCommands(msgs)
 
-        # TODO  Må legge inn noe her som sender stateCommands med jevne mellomrom (hvert minutt?),
+        # TODO  Burde legge inn noe her som sender stateCommands med jevne mellomrom (hvert minutt?),
         #       sånn i tilfelle
         
         # TODO  Må legge inn noen her som sjekker på nytt (hvet minutt? femte minutt)
