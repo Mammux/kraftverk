@@ -54,6 +54,15 @@ def stateCommands(msgs):
         global waterfall_snd
         global waterpipe_snd
         global hz_snd
+
+        global transformer_on 
+        global generator_on 
+        global ac_on 
+        global dc_level
+        global freq
+        global adj_res
+        global shunt
+        global water
         
         if (transformer_on):
                 if __debug__:
@@ -109,6 +118,15 @@ def handleMessage(msg):
         global waterfall_snd
         global waterpipe_snd
         global hz_snd
+
+        global transformer_on 
+        global generator_on 
+        global ac_on 
+        global dc_level
+        global freq
+        global adj_res
+        global shunt
+        global water
         
         if __debug__:
                print("handleMessage: {}".format(str(msg)))
