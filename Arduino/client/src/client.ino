@@ -198,6 +198,27 @@ void setup()
   updateFreq(hz); // starter pÃ¥ 50Hz
 #endif
 
+#if defined(LIGHT_ARDUINO)
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  digitalWrite(8, HIGH);
+  digitalWrite(9, HIGH);
+  digitalWrite(10, HIGH);
+  digitalWrite(11, HIGH);
+#endif
+
+#if defined(DC_VOLT_ARDUINO)
+  pinMode(12, OUTPUT);
+  digitalWrite(12, HIGH);
+#endif
+
+#if defined(DC_AMP_ARDUINO)
+  pinMode(13, OUTPUT);
+  digitalWrite(12, HIGH);
+#endif
+
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
 
@@ -278,7 +299,7 @@ void loop()
   }
 #endif
 
-// Må erstatte dette med noe som følger med på hvor lenge det er siden vi sist sendte "status"
+// M?erstatte dette med noe som f?lger med p?hvor lenge det er siden vi sist sendte "status"
 
 #if defined(BUTTONS_ARDUINO) || defined(CONTROLS_ARDUINO)
   delay(1000);
