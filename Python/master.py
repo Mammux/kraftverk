@@ -13,7 +13,7 @@ dam_snd = None
 waterfall_snd = None
 waterpipe_snd = None
 
-commands = [["error", ""],
+commands = [["error", "s"],
         ["id", "I"],
 	["button_pressed", "I"],
 	["control_pos", "II"],

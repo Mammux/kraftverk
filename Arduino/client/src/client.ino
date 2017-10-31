@@ -110,6 +110,7 @@ void OnLightOn()
     digitalWrite(8+light, HIGH);
   } else {
     cmdMessenger.sendCmdStart(error);
+    cmdMessenger.sendCmdArg("Bad light: {}".format(light));
     cmdMessenger.sendCmdEnd();
   }
 }
@@ -121,6 +122,7 @@ void OnLightOff()
     digitalWrite(8+light, LOW);
   } else {
     cmdMessenger.sendCmdStart(error);
+    cmdMessenger.sendCmdArg("Bad light: {}".format(light));
     cmdMessenger.sendCmdEnd();
   }
 }
@@ -265,6 +267,7 @@ void setup()
 void handleButton(uint16_t pin, uint16_t button, bool high) 
 {
   int val = analogRead(pin);
+  cmdMessenger.sendCmd(error, "Debug: bt {} val {}".format(button, val));
   if ((val > 512 & high) || (val < 512 & !high)) {
     cmdMessenger.sendCmdStart(button_pressed);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)button);
