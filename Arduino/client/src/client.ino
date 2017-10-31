@@ -1,13 +1,13 @@
 #include <CmdMessenger.h>  // CmdMessenger
 
-// #define LIGHT_ARDUINO // OK
-// #define BUTTON_ARDUINO // OK
+#define LIGHT_ARDUINO // OK
+#define BUTTON_ARDUINO // OK
 // #define CONTROLS_ARDUINO // OK
 // #define WATER_ARDUINO // OK
 // #define VFD_ARDUINO // OK
 // #define HZ_ARDUINO // OK
-// #define DC_VOLT_ARDUINO // OK
-// #define DC_AMP_ARDUINO // OK
+#define DC_VOLT_ARDUINO // OK
+#define DC_AMP_ARDUINO // OK
 
 #if defined(WATER_ARDUINO)
 #include <SoftwareSerial.h>
@@ -189,6 +189,21 @@ void setup()
 
 #if defined(VFD_ARDUINO)
   pinMode(6, OUTPUT);
+#endif
+
+#if defined(LIGHT_ARDUINO)
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+#endif
+
+#if defined(DC_VOLT_ARDUINO)
+  pinMode(12, OUTPUT);
+#endif
+
+#if defined(DC_AMP_ARDUINO)
+  pinMode(13, OUTPUT);
 #endif
 
 #if defined(HZ_ARDUINO)
