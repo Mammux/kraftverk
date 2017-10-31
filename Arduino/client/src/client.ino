@@ -184,13 +184,17 @@ void OnError()
 void updateMsgs()
 {
 #if defined(BUTTON_ARDUINO)
-  cmdMessenger.sendCmdStart(id);
-  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
-  cmdMessenger.sendCmdEnd();
+  // cmdMessenger.sendCmdStart(id);
+  // cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
+  // cmdMessenger.sendCmdEnd();
   handleButton(A0, 3, false);
+  delay(10);
   handleButton(A1, 2, true);
+  delay(10);
   handleButton(A2, 0, false);
+  delay(10);
   handleButton(A3, 1, true);
+  delay(10);
 #endif
 
 #if defined(CONTROLS_ARDUINO)
