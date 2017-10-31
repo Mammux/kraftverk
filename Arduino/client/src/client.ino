@@ -45,7 +45,7 @@ set_hz
 };
 
 // Attach a new CmdMessenger object to the default Serial port
-CmdMessenger cmdMessenger = CmdMessenger(Serial);
+CmdMessenger cmdMessenger = CmdMessenger(Serial,',',';','/');
 
 // Callbacks define on which received commands we take action 
 void attachCommandCallbacks()
