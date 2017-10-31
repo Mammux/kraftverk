@@ -199,14 +199,8 @@ def mainLoop():
 #ifdef DEBUG
                         print("c: {}".format(str(c)))
 #endif
-                        try:
-                                msg = c.receive()
-                                handleMessage(msg)
-                        except:
-                                info = sys.exc_info()
-                                print("Ex info[0]: {}".format(info[0]))
-                                print("Ex info[1]: {}".format(info[1]))
-                                pass
+                        msg = c.receive()
+                        handleMessage(msg)
                 stateCommands(msgs)
 
 mainLoop()
