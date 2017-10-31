@@ -79,8 +79,8 @@ def stateCommands(msgs):
         else:
                 if __debug__:
                         print("generator off");
-                [msg.send("light_on", 2) for msg in msgs]
-                [msg.send("light_off", 3) for msg in msgs]
+                [msg.send("light_on", 3) for msg in msgs]
+                [msg.send("light_off", 2) for msg in msgs]
         
         if (ac_on):
                 [msg.send("engage_dc_volt") for msg in msgs]
