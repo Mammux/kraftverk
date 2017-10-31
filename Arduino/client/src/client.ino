@@ -23,6 +23,9 @@ int hz = 50;
 boolean toggle1 = 0;
 #endif
 
+// Kunne vaert bare for de som trenger
+SimpleTimer timer;
+
 // Commands
 
 enum
