@@ -109,9 +109,9 @@ void OnLightOn()
   if (light < 5 & light > -1) {
     digitalWrite(8+light, HIGH);
   } else {
-    cmdMessenger.sendCmdStart(error);
-    cmdMessenger.sendCmdArg("Bad light: {}".format(light));
-    cmdMessenger.sendCmdEnd();
+    char debug[255];
+    sprintf(debug, "Bad light: %d", light);
+    cmdMessenger.sendCmd(error, debug);
   }
 }
 
@@ -121,9 +121,9 @@ void OnLightOff()
   if (light < 5 & light > -1) {
     digitalWrite(8+light, LOW);
   } else {
-    cmdMessenger.sendCmdStart(error);
-    cmdMessenger.sendCmdArg("Bad light: {}".format(light));
-    cmdMessenger.sendCmdEnd();
+    char debug[255];
+    sprintf(debug, "Bad light: %d", light);
+    cmdMessenger.sendCmd(error, debug);
   }
 }
 #endif
