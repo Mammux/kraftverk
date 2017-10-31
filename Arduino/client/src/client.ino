@@ -1,4 +1,5 @@
 #include <CmdMessenger.h>  // CmdMessenger
+#include <SimpleTimer.h>  // SimpleTimer
 
 // #define LIGHT_ARDUINO // OK
 #define BUTTON_ARDUINO // OK
@@ -177,6 +178,26 @@ void OnError()
 // nop
 }
 
+void updateMsgs()
+{
+#if defined(BUTTON_ARDUINO)
+  cmdMessenger.sendCmdStart(id);
+  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
+  cmdMessenger.sendCmdEnd();
+  handleButton(A0, 3, false);
+  handleButton(A1, 2, true);
+  handleButton(A2, 0, false);
+  handleButton(A3, 1, true);
+#endif
+
+#if defined(CONTROLS_ARDUINO)
+  cmdMessenger.sendCmdStart(id);
+  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)2);
+  cmdMessenger.sendCmdEnd();
+  handleCtrls();
+#endif
+}
+
 // Setup function
 void setup() 
 {
@@ -216,12 +237,13 @@ void setup()
 
 #if defined(DC_AMP_ARDUINO)
   pinMode(13, OUTPUT);
-  digitalWrite(12, HIGH);
+  digitalWrite(13, HIGH);
 #endif
 
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
 
+  timer.setInterval(1000,updateMsgs);
 }
 
 #if defined(BUTTON_ARDUINO)
@@ -265,27 +287,9 @@ void handleCtrls()
 // Loop function
 void loop() 
 {
-#if defined(LIGHT_ARDUINO) || defined(VFD_ARDUINO)
+  timer.run();
   cmdMessenger.feedinSerialData();
-#endif
   
-#if defined(BUTTON_ARDUINO)
-  cmdMessenger.sendCmdStart(id);
-  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
-  cmdMessenger.sendCmdEnd();
-  handleButton(A0, 3, false);
-  handleButton(A1, 2, true);
-  handleButton(A2, 0, false);
-  handleButton(A3, 1, true);
-#endif
-
-#if defined(CONTROLS_ARDUINO)
-  cmdMessenger.sendCmdStart(id);
-  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)2);
-  cmdMessenger.sendCmdEnd();
-  handleCtrls();
-#endif
-
 // Water arduino looper stramt
 #if defined(WATER_ARDUINO)
   long newPosition = myEnc.read();
@@ -299,11 +303,6 @@ void loop()
   }
 #endif
 
-// M?erstatte dette med noe som f?lger med p?hvor lenge det er siden vi sist sendte "status"
-
-#if defined(BUTTONS_ARDUINO) || defined(CONTROLS_ARDUINO)
-  delay(1000);
-#endif
 }
 
 
