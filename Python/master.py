@@ -5,8 +5,6 @@ import pygame
 import time
 from time import sleep
 
-#undef MASTER_DEBUG
-
 hydro_snd = None
 creaking_snd = None
 dam_snd = None
@@ -56,51 +54,43 @@ def stateCommands(msgs):
         global waterpipe_snd
         
         if (transformer_on):
-#if defined(MASTER_DEBUG)
-                print("transformer on");
-#endif        
+                if __debug__:
+                        print("transformer on");
                 [msg.send("light_on", 0) for msg in msgs]
                 [msg.send("light_off", 1) for msg in msgs]
         else:
-#if defined(MASTER_DEBUG)
-                print("transformer off");
-#endif        
+                if __debug__:
+                        print("transformer off");
                 [msg.send("light_on", 1) for msg in msgs]
                 [msg.send("light_off", 0) for msg in msgs]
                 
         if (generator_on):
-#if defined(MASTER_DEBUG)
-                print("generator on");
-#endif        
+                if __debug__:
+                        print("generator on");
                 [msg.send("light_on", 2) for msg in msgs]
                 [msg.send("light_off", 3) for msg in msgs]
         else:
-#if defined(MASTER_DEBUG)
-                print("generator off");
-#endif        
+                if __debug__:
+                        print("generator off");
                 [msg.send("light_on", 2) for msg in msgs]
                 [msg.send("light_off", 3) for msg in msgs]
         
         if (ac_on):
                 [msg.send("engage_dc_volt") for msg in msgs]
-#if defined(MASTER_DEBUG)
-                print("ac_on");
-#endif        
+                if __debug__:
+                        print("ac_on");
         else:
                 [msg.send("disengage_dc_volt") for msg in msgs]
-#if defined(MASTER_DEBUG)
-                print("ac_off");
-#endif        
+                if __debug__:
+                        print("ac_off");
                         
         [msg.send("set_vfd", dc_level) for msg in msgs]
-#if defined(MASTER_DEBUG)
-        print("set_vfd {}".format(dc_level));
-#endif        
+        if __debug__:
+                print("set_vfd {}".format(dc_level));
         
         [msg.send("set_hz", freq) for msg in msgs]
-#if defined(MASTER_DEBUG)
-        print("set_hz {}".format(freq));
-#endif        
+        if __debug__:
+                print("set_hz {}".format(freq));
 
         hydro_snd.set_volume(min(dc_level, water)/255)        
         waterfall_snd.set_volume(255 / water);
@@ -117,9 +107,9 @@ def handleMessage(msg):
         global waterfall_snd
         global waterpipe_snd
         
-#if defined(MASTER_DEBUG)
-        print("handleMessage: {}".format(str(msg)))
-#endif
+        if __debug__:
+               print("handleMessage: {}".format(str(msg)))
+
         if msg == None:
                 return;
         
@@ -196,9 +186,8 @@ def mainLoop():
         
         while True:
                 for c in msgs:
-#if defined(MASTER_DEBUG)
-                        print("c: {}".format(str(c)))
-#endif
+                        if __debug__:
+                                print("c: {}".format(str(c)))
                         msg = c.receive()
                         handleMessage(msg)
                 stateCommands(msgs)
