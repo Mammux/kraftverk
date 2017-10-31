@@ -14,17 +14,17 @@ waterfall_snd = None
 waterpipe_snd = None
 
 commands = [["error", ""],
-        ["id", "i"],
-	["button_pressed", "i"],
-	["control_pos", "ii"],
-	["light_on", "i"],		
-	["light_off", "i"],		
+        ["id", "I"],
+	["button_pressed", "I"],
+	["control_pos", "II"],
+	["light_on", "I"],		
+	["light_off", "I"],		
 	["engage_dc_volt", ""],		
 	["disengage_dc_volt", ""],
 	["engage_dc_amp", ""],	
 	["disengage_dc_amp", ""],	
-	["set_vfd", "i"],
-        ["set_hz", "i"]]
+	["set_vfd", "I"],
+        ["set_hz", "I"]]
 
 def getMessengers():
 	Aports = glob.glob("/dev/ttyACM*")
