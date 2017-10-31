@@ -133,7 +133,7 @@ def handleMessage(msg):
                         transformer_on = True
                 elif btn == 1: # venstre rød
                         tranformer_on = False
-                elif brn == 2: # høyre grønn
+                elif btn == 2: # høyre grønn
                         generator_on = True
                 elif btn == 3: # høyre rød
                         generator_on = False
