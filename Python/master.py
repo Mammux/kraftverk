@@ -5,7 +5,7 @@ import pygame
 import time
 from time import sleep
 
-# #define DEBUG true
+#undef DEBUG
 
 hydro_snd = None
 creaking_snd = None
