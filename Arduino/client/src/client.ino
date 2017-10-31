@@ -20,6 +20,7 @@ long oldPosition = -999;
 
 #if defined(HZ_ARDUINO)
 int hz = 50;
+int strength = 128;
 boolean toggle1 = 0;
 #endif
 
@@ -57,7 +58,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(light_off, OnLightOff);
 #endif
 
-#if defined(VFD_ARDUINO)
+#if defined(VFD_ARDUINO) || defined(HZ_ARDUINO)
   cmdMessenger.attach(set_vfd, OnSetVFD);
 #endif
 
@@ -128,13 +129,17 @@ void OnLightOff()
 }
 #endif
 
-#if defined(VFD_ARDUINO)
+#if defined(VFD_ARDUINO) || defined(HZ_ARDUINO)
 void OnSetVFD() 
 {
   int level = cmdMessenger.readBinArg<int>();
   if (level > 255) { level = 255; }
   if (level < 0) { level = 0; }
+#if defined(VFD_ARDUINO) 
   analogWrite(6, level);
+#else
+  strength = level;
+#endif
 }
 #endif
 
@@ -167,11 +172,11 @@ void updateFreq(int freq) {
 ISR(TIMER1_COMPA_vect){
 // TODO: klarer vi å få denne til å være lenger / kortere HIGH avhengig av volum?
   if (toggle1){
-    digitalWrite(7,HIGH);
+    analogWrite(5,strength);
     toggle1 = 0;
   }
   else{
-    digitalWrite(7,LOW);
+    analogWrite(5,0);
     toggle1 = 1;
   }
 }
@@ -221,7 +226,7 @@ void setup()
 #endif
 
 #if defined(HZ_ARDUINO)
-  pinMode(7, OUTPUT);
+  pinMode(5, OUTPUT);
   updateFreq(hz); // starter på 50Hz
 #endif
 
