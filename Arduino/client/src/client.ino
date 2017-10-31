@@ -1,7 +1,7 @@
 #include <CmdMessenger.h>  // CmdMessenger
 
-#define LIGHT_ARDUINO // OK
-// #define BUTTON_ARDUINO // OK
+// #define LIGHT_ARDUINO // OK
+#define BUTTON_ARDUINO // OK
 // #define CONTROLS_ARDUINO // OK
 // #define WATER_ARDUINO // OK
 // #define VFD_ARDUINO // OK
@@ -228,7 +228,7 @@ void setup()
 void handleButton(int pin, int button, bool high) 
 {
   int val = analogRead(pin);
-  if ((val > 512 & high) | (val < 512 & !high)) {
+  if ((val > 512 & high) || (val < 512 & !high)) {
     cmdMessenger.sendCmdStart(button_pressed);
     cmdMessenger.sendCmdArg<uint16_t>((uint16_t)button);
     cmdMessenger.sendCmdEnd();
