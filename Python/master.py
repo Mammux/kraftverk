@@ -146,7 +146,7 @@ def handleMessage(msg):
                         transformer_on = False
                 elif btn == 1: # venstre inn
                         if (not transformer_on):
-                                hz_snd.play(fade_ms=1);
+                                hz_snd.play(fade_ms=1000);
                         transformer_on = True
                 elif btn == 2: # høyre ut
                         generator_on = False
@@ -182,6 +182,10 @@ def mainLoop():
         msgs = getMessengers()
         
         pygame.mixer.init(frequency=44100, size=-16, channels=6, buffer=4096)
+        hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
+        hz_snd.set_volume(1.0)
+        hz_snd.play(loops=-1)
+
         hydro_snd = pygame.mixer.Sound("sounds/hydroelectric_loop.wav")
         hydro_snd.set_volume(0.0)
         hydro_snd.play(loops=-1)
@@ -201,10 +205,6 @@ def mainLoop():
         waterpipe_snd = pygame.mixer.Sound("sounds/waterpipe_loop.wav")
         waterpipe_snd.set_volume(0.0)
         waterpipe_snd.play(loops=-1)
-
-        hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
-        hz_snd.set_volume(0.5)
-        hz_snd.play(loops=-1)
 
         stateCommands(msgs)
 
