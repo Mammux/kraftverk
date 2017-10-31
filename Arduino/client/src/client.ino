@@ -189,9 +189,10 @@ void updateMsgs()
   cmdMessenger.sendCmdStart(id);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdEnd();
-  handleButton(A0, 3, false);
+// This needs updating for real life in Flørli
+  handleButton(A0, 3, true);
   handleButton(A1, 2, true);
-  handleButton(A2, 0, false);
+  handleButton(A2, 0, true);
   handleButton(A3, 1, true);
 #endif
 
