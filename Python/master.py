@@ -43,10 +43,6 @@ adj_res = 0 # 0 to 255 "Innstillingsmotstand", currently not connected
 shunt = 0 # 0 to 255 "Shunt", currently not connected
 water = 255 # 0 to 255 "Water pressure", currently not connected to anything but sound
 
-# creaking_snd = None
-# dam_snd = None
-# waterfall_snd = None
-
 def stateCommands(msgs):
         global hydro_snd
         global creaking_snd
@@ -103,8 +99,8 @@ def stateCommands(msgs):
         if __debug__:
                 print("set_hz {}".format(freq));
 
-#        hydro_snd.set_volume(min(dc_level, water)/255)        
-#        waterfall_snd.set_volume(255 / water);
+        hydro_snd.set_volume(min(dc_level, water)/255)        
+        waterfall_snd.set_volume(255 / water);
 
         if (water > 50 | water == 0):
                 waterpipe_snd.set_volume(0.0)

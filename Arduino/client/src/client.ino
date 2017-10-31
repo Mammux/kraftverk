@@ -1,7 +1,7 @@
 #include <CmdMessenger.h>  // CmdMessenger
 #include <SimpleTimer.h>  // SimpleTimer
 
-// #define LIGHT_ARDUINO // OK
+#define LIGHT_ARDUINO // OK
 #define BUTTON_ARDUINO // OK
 // #define CONTROLS_ARDUINO // OK
 // #define WATER_ARDUINO // OK
