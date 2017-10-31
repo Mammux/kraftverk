@@ -255,7 +255,7 @@ void setup()
 }
 
 #if defined(BUTTON_ARDUINO)
-void handleButton(int pin, int button, bool high) 
+void handleButton(uint16_t pin, uint16_t button, bool high) 
 {
   int val = analogRead(pin);
   if ((val > 512 & high) || (val < 512 & !high)) {
