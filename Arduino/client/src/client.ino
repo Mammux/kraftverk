@@ -227,6 +227,13 @@ void setup()
   updateFreq(hz); // starter på 50Hz
 #endif
 
+#if defined(BUTTON_ARDUINO)
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  pinMode(A2, INPUT);
+  pinMode(A3, INPUT);
+#endif
+
 #if defined(LIGHT_ARDUINO)
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
