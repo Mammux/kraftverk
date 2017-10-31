@@ -7,8 +7,8 @@
 // #define WATER_ARDUINO // OK
 // #define VFD_ARDUINO // OK
 // #define HZ_ARDUINO // OK
-// #define DC_VOLT_ARDUINO // OK
-// #define DC_AMP_ARDUINO // OK
+#define DC_VOLT_ARDUINO // OK
+#define DC_AMP_ARDUINO // OK
 
 #if defined(WATER_ARDUINO)
 #include <SoftwareSerial.h>
