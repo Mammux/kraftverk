@@ -142,7 +142,7 @@ def handleMessage(msg):
                 btn = msg[1][0]
                 if btn == 0: # venstre ut
                         if (transformer_on):
-                                hz_snd.fadeout();
+                                hz_snd.fadeout(1000);
                         transformer_on = False
                 elif btn == 1: # venstre inn
                         if (not transformer_on):
@@ -203,7 +203,7 @@ def mainLoop():
         waterpipe_snd.play(loops=-1)
 
         hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
-        hz_snd.set_volume(0.0)
+        hz_snd.set_volume(0.5)
         hz_snd.play(loops=-1)
 
         stateCommands(msgs)
