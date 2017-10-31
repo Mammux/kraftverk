@@ -10,6 +10,7 @@ creaking_snd = None
 dam_snd = None
 waterfall_snd = None
 waterpipe_snd = None
+hz_snd = None
 
 commands = [["error", "s"],
         ["id", "I"],
@@ -52,6 +53,7 @@ def stateCommands(msgs):
         global dam_snd
         global waterfall_snd
         global waterpipe_snd
+        global hz_snd
         
         if (transformer_on):
                 if __debug__:
@@ -106,6 +108,7 @@ def handleMessage(msg):
         global dam_snd
         global waterfall_snd
         global waterpipe_snd
+        global hz_snd
         
         if __debug__:
                print("handleMessage: {}".format(str(msg)))
@@ -119,14 +122,18 @@ def handleMessage(msg):
                 True # nop for now
         elif msg[0] == "button_pressed":
                 btn = msg[1][0]
-                if btn == 0: # venstre grønn
+                if btn == 0: # venstre ut
+                        if (transformer_on):
+                                hz_snd.fadeout();
+                        transformer_on = False
+                elif btn == 1: # venstre inn
+                        if (!transformer_on):
+                                hz_snd.play(fade_ms=1);
                         transformer_on = True
-                elif btn == 1: # venstre rød
-                        tranformer_on = False
-                elif btn == 2: # høyre grønn
-                        generator_on = True
-                elif btn == 3: # høyre rød
+                elif btn == 2: # høyre ut
                         generator_on = False
+                elif btn == 3: # høyre inn
+                        generator_on = True
         elif msg[0] == "control_pos":
                 ctrl = msg[1][0]
                 pos = msg[1][1]
@@ -155,7 +162,7 @@ def mainLoop():
         
         msgs = getMessengers()
         
-        pygame.mixer.init(frequency=44100, size=-16, channels=5, buffer=4096)
+        pygame.mixer.init(frequency=44100, size=-16, channels=6, buffer=4096)
         hydro_snd = pygame.mixer.Sound("sounds/hydroelectric_loop.wav")
         hydro_snd.set_volume(0.0)
         hydro_snd.play(loops=-1)
@@ -175,6 +182,10 @@ def mainLoop():
         waterpipe_snd = pygame.mixer.Sound("sounds/waterpipe_loop.wav")
         waterpipe_snd.set_volume(0.0)
         waterpipe_snd.play(loops=-1)
+
+        hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
+        hz_snd.set_volume(0.0)
+        hz_snd.play(loops=-1)
 
         stateCommands(msgs)
 
