@@ -177,6 +177,7 @@ def mainLoop():
         global dam_snd
         global waterfall_snd
         global waterpipe_snd
+        global hz_snd
         
         msgs = getMessengers()
         
