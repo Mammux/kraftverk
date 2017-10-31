@@ -189,15 +189,10 @@ void updateMsgs()
   cmdMessenger.sendCmdStart(id);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdEnd();
-  delay(500);
   handleButton(A0, 3, false);
-  delay(500);
   handleButton(A1, 2, true);
-  delay(500);
   handleButton(A2, 0, false);
-  delay(500);
   handleButton(A3, 1, true);
-  delay(500);
 #endif
 
 #if defined(CONTROLS_ARDUINO)
