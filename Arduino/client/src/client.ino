@@ -184,17 +184,18 @@ void OnError()
 void updateMsgs()
 {
 #if defined(BUTTON_ARDUINO)
-  // cmdMessenger.sendCmdStart(id);
-  // cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
-  // cmdMessenger.sendCmdEnd();
+  cmdMessenger.sendCmdStart(id);
+  cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
+  cmdMessenger.sendCmdEnd();
+  delay(500);
   handleButton(A0, 3, false);
-  delay(10);
+  delay(500);
   handleButton(A1, 2, true);
-  delay(10);
+  delay(500);
   handleButton(A2, 0, false);
-  delay(10);
+  delay(500);
   handleButton(A3, 1, true);
-  delay(10);
+  delay(500);
 #endif
 
 #if defined(CONTROLS_ARDUINO)
@@ -250,7 +251,7 @@ void setup()
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
 
-  timer.setInterval(1000,updateMsgs);
+  timer.setInterval(5000,updateMsgs);
 }
 
 #if defined(BUTTON_ARDUINO)
