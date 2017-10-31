@@ -1,13 +1,13 @@
 #include <CmdMessenger.h>  // CmdMessenger
 
-#define LIGHT_ARDUINO // OK
-#define BUTTON_ARDUINO // OK
+// #define LIGHT_ARDUINO // OK
+// #define BUTTON_ARDUINO // OK
 // #define CONTROLS_ARDUINO // OK
 // #define WATER_ARDUINO // OK
 // #define VFD_ARDUINO // OK
 // #define HZ_ARDUINO // OK
-#define DC_VOLT_ARDUINO // OK
-#define DC_AMP_ARDUINO // OK
+// #define DC_VOLT_ARDUINO // OK
+// #define DC_AMP_ARDUINO // OK
 
 #if defined(WATER_ARDUINO)
 #include <SoftwareSerial.h>
@@ -105,7 +105,8 @@ void OnLightOn()
   if (light < 5 & light > -1) {
     digitalWrite(8+light, HIGH);
   } else {
-    cmdMessenger.sendCmd(error);
+    cmdMessenger.sendCmdStart(error);
+    cmdMessenger.sendCmdEnd();
   }
 }
 
@@ -115,7 +116,8 @@ void OnLightOff()
   if (light < 5 & light > -1) {
     digitalWrite(8+light, LOW);
   } else {
-    cmdMessenger.sendCmd(error);
+    cmdMessenger.sendCmdStart(error);
+    cmdMessenger.sendCmdEnd();
   }
 }
 #endif
@@ -191,21 +193,6 @@ void setup()
   pinMode(6, OUTPUT);
 #endif
 
-#if defined(LIGHT_ARDUINO)
-  pinMode(8, OUTPUT);
-  pinMode(9, OUTPUT);
-  pinMode(10, OUTPUT);
-  pinMode(11, OUTPUT);
-#endif
-
-#if defined(DC_VOLT_ARDUINO)
-  pinMode(12, OUTPUT);
-#endif
-
-#if defined(DC_AMP_ARDUINO)
-  pinMode(13, OUTPUT);
-#endif
-
 #if defined(HZ_ARDUINO)
   pinMode(7, OUTPUT);
   updateFreq(hz); // starter på 50Hz
@@ -221,7 +208,9 @@ void handleButton(int pin, int button, bool high)
 {
   int val = analogRead(pin);
   if ((val > 512 & high) | (val < 512 & !high)) {
-    cmdMessenger.sendCmd(button_pressed, button);
+    cmdMessenger.sendCmdStart(button_pressed);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)button);
+    cmdMessenger.sendCmdEnd();
   }
 }
 #endif
@@ -233,11 +222,21 @@ void handleCtrls()
   int c_1_a = analogRead(A0);
   int c_1_b = analogRead(A2);
   if (c_1_a > 512 & c_1_b > 512) {
-    cmdMessenger.sendCmd(control_pos, 0, 1);
+    cmdMessenger.sendCmdStart(control_pos);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)1);
+    cmdMessenger.sendCmdEnd();
+
   } else if (c_1_a < 512) {
-    cmdMessenger.sendCmd(control_pos, 0, 2);
+    cmdMessenger.sendCmdStart(control_pos);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)2);
+    cmdMessenger.sendCmdEnd();
   } else {
-    cmdMessenger.sendCmd(control_pos, 0, 0);
+    cmdMessenger.sendCmdStart(control_pos);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdEnd();
   }
 }
 #endif
