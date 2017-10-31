@@ -204,9 +204,8 @@ def mainLoop():
                                 handleMessage(msg)
                         except:
                                 info = sys.exc_info()
-                                print(info[0])
-                                print(info[1])
-                                traceback.print_tb(info[2])
+                                print("Ex info[0]: {}".format(info[0]))
+                                print("Ex info[1]: {}".format(info[1]))
                                 pass
                 stateCommands(msgs)
 
