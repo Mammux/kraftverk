@@ -261,7 +261,14 @@ void setup()
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
 
+#if defined(BUTTON_ARDUINO)
+  timer.setInterval(100,updateMsgs);
+#endif
+
+#if defined(CONTROLS_ARDUINO)
   timer.setInterval(1000,updateMsgs);
+#endif
+
 }
 
 #if defined(BUTTON_ARDUINO)
