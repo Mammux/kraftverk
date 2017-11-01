@@ -107,7 +107,7 @@ void OnDisengageDCAmp()
 void OnLightOn()
 {
   int light = cmdMessenger.readBinArg<int>();
-  if (light < 5 & light > -1) {
+  if (light < 5 and light > -1) {
     digitalWrite(8+light, HIGH);
   } else {
     char debug[255];
@@ -119,7 +119,7 @@ void OnLightOn()
 void OnLightOff()
 {
   int light = cmdMessenger.readBinArg<int>();
-  if (light < 5 & light > -1) {
+  if (light < 5 and light > -1) {
     digitalWrite(8+light, LOW);
   } else {
     char debug[255];
@@ -261,7 +261,7 @@ void setup()
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
 
-  timer.setInterval(500,updateMsgs);
+  timer.setInterval(1000,updateMsgs);
 }
 
 #if defined(BUTTON_ARDUINO)
@@ -271,7 +271,7 @@ void handleButton(uint16_t pin, uint16_t button, bool high)
   char debug[255];
   sprintf(debug, "Debug: bt %d val %d", button, val);
   cmdMessenger.sendCmd(error, debug);
-  if ((val > 512 & high) || (val < 512 & !high)) {
+  if ((val > 512 and high) || (val < 512 and !high)) {
     cmdMessenger.sendCmdStart(button_pressed);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)button);
     cmdMessenger.sendCmdEnd();
@@ -285,7 +285,7 @@ void handleCtrls()
   // Turbinregulator (0) 0: synker 1: nøytral 2: stiger
   int c_1_a = analogRead(A0);
   int c_1_b = analogRead(A2);
-  if (c_1_a > 512 & c_1_b > 512) {
+  if (c_1_a > 512 and c_1_b > 512) {
     cmdMessenger.sendCmdStart(control_pos);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
