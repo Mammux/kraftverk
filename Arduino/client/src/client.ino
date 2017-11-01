@@ -290,7 +290,7 @@ void setup()
 void handleButton(uint16_t pin, uint16_t button, bool high) 
 {
   int val = analogRead(pin);
-  char debug[255];
+  // char debug[255];
   // sprintf(debug, "Debug: bt %d val %d", button, val);
   // cmdMessenger.sendCmd(error, debug);
   if ((val > 512 and high) || (val < 512 and !high)) {
@@ -307,6 +307,7 @@ void handleCtrls()
   // Turbinregulator (0) 0: synker 1: nøytral 2: stiger
   int c_1_a = analogRead(A0);
   int c_1_b = analogRead(A2);
+  char debug[255];
   sprintf(debug, "Debug: ctrl 0 a %d b %d", c_1_a, c_1_b);
   cmdMessenger.sendCmd(error, debug);
   if (c_1_a > 512 and c_1_b > 512) {
