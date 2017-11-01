@@ -124,11 +124,12 @@ def handleMessage(msg):
         global shunt
         global water
         
-        if __debug__:
-               print("handleMessage: {}".format(str(msg)))
 
         if msg == None:
                 return;
+
+        if __debug__:
+               print("handleMessage: {}".format(str(msg)))
         
         if msg[0] == "error":
                 print("Error: {}\n".format(msg[1]))
@@ -214,11 +215,12 @@ def mainLoop():
 
         while True:
                 for c in msgs:
-                        if __debug__:
+                        if False and __debug__:
                                 print("c: {}".format(str(c)))
                         try:
                                 msg = c.receive()
-                                handleMessage(msg)
+                                if msg:
+                                        handleMessage(msg)
                         except:
                                 print("Unexpected error:", sys.exc_info()[0])
                 if (time.time() - prevTime > 2):
