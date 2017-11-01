@@ -212,6 +212,11 @@ void updateMsgs()
 // Setup function
 void setup() 
 {
+
+  // Wait for master.py to get ready
+  delay(5000);
+
+
   // Listen on serial connection for messages from the PC
   // 115200 is the max speed on Arduino Uno, Mega, with AT8u2 USB
   // Use 57600 for the Arduino Duemilanove and others with FTDI Serial
