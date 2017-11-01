@@ -210,13 +210,17 @@ def mainLoop():
         # TODO  Må legge inn noen her som sjekker på nytt (hvet minutt? femte minutt)
         #       om det er nye arduinoer som er koblet til / koblet fra
         
+        prevTime = time.time()
+
         while True:
                 for c in msgs:
                         if __debug__:
                                 print("c: {}".format(str(c)))
                         msg = c.receive()
                         handleMessage(msg)
-                stateCommands(msgs)
+                if (time.time() - prevTime > 2):
+                        stateCommands(msgs)
+                        prevTime = time.time()
 
 mainLoop()
 
