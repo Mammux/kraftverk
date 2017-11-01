@@ -221,6 +221,8 @@ def mainLoop():
                                 msg = c.receive()
                                 if msg:
                                         handleMessage(msg)
+                        except KeyboardInterrupt:
+                                raise
                         except:
                                 print("Unexpected error:", sys.exc_info()[0])
                 if (time.time() - prevTime > 2):
