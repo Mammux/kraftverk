@@ -214,7 +214,7 @@ void setup()
 {
 
   // Wait for master.py to get ready
-  delay(5000);
+  delay(10000);
 
 
   // Listen on serial connection for messages from the PC

@@ -216,7 +216,10 @@ def mainLoop():
                 for c in msgs:
                         if __debug__:
                                 print("c: {}".format(str(c)))
-                        msg = c.receive()
+                        try:
+                                msg = c.receive()
+                        except:
+                                print("Receive error");
                         handleMessage(msg)
                 if (time.time() - prevTime > 2):
                         stateCommands(msgs)
