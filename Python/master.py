@@ -28,7 +28,7 @@ commands = [["error", "s"],
 def getMessengers():
 	Aports = glob.glob("/dev/ttyACM*")
 	# Uports = glob.glob("/dev/ttyUSB*") # Handles lower-speed RS-485 ports separately
-	msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=57600),commands) for serial_device in Aports]
+	msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0.1,baud_rate=57600),commands) for serial_device in Aports]
 	# msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=2400),commands) for serial_device in Uports]
 	return msgs
 
@@ -124,13 +124,12 @@ def handleMessage(msg):
         global shunt
         global water
         
-
-        if msg == None:
-                return;
-
         if __debug__:
                print("handleMessage: {}".format(str(msg)))
         
+        if msg == None:
+                return;
+
         if msg[0] == "error":
                 print("Error: {}\n".format(msg[1]))
         elif msg[0] == "id":
@@ -219,13 +218,13 @@ def mainLoop():
                                 print("c: {}".format(str(c)))
                         try:
                                 msg = c.receive()
-                                if msg:
-                                        handleMessage(msg)
+                                handleMessage(msg)
                         except KeyboardInterrupt:
                                 raise
                         except:
                                 print("Unexpected error:", sys.exc_info()[0])
-                if (time.time() - prevTime > 2):
+                                
+                if (time.time() - prevTime > 5):
                         stateCommands(msgs)
                         prevTime = time.time()
 
