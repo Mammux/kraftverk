@@ -195,9 +195,9 @@ void updateMsgs()
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdEnd();
 // This needs updating for real life in Flørli, some are high and others are low, and 512 may not even be a good cutoff
-  handleButton(A0, 3, true);
+  handleButton(A0, 3, false);
   handleButton(A1, 2, true);
-  handleButton(A2, 0, true);
+  handleButton(A2, 0, false);
   handleButton(A3, 1, true);
 #endif
 
