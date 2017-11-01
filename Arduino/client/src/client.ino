@@ -304,12 +304,13 @@ void handleButton(uint16_t pin, uint16_t button, bool high)
 #if defined(CONTROLS_ARDUINO)
 void handleCtrls()
 {
+  char debug[255];
+  sprintf(debug, "Debug: ctrl a0 %d a1 %d a2 %d a3 %d a4 %d a5 %d", analogRead(A0), analogRead(A1), analogRead(A2), analogRead(A3), analogRead(A4), analogRead(A5));
+  cmdMessenger.sendCmd(error, debug);
+
   // Turbinregulator (0) 0: synker 1: nøytral 2: stiger
   int c_1_a = analogRead(A0);
   int c_1_b = analogRead(A2);
-  char debug[255];
-  sprintf(debug, "Debug: ctrl 0 a %d b %d", c_1_a, c_1_b);
-  cmdMessenger.sendCmd(error, debug);
   if (c_1_a > 512 and c_1_b > 512) {
     cmdMessenger.sendCmdStart(control_pos);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
