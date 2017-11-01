@@ -1,14 +1,14 @@
 #include <CmdMessenger.h>  // CmdMessenger
 #include <SimpleTimer.h>  // SimpleTimer
 
-#define LIGHT_ARDUINO // OK
-#define BUTTON_ARDUINO // OK
+// #define LIGHT_ARDUINO // OK
+// #define BUTTON_ARDUINO // OK
 // #define CONTROLS_ARDUINO // OK
 // #define WATER_ARDUINO // OK
 // #define VFD_ARDUINO // OK
-#define HZ_ARDUINO // OK
-#define DC_VOLT_ARDUINO // OK
-#define DC_AMP_ARDUINO // OK
+// #define HZ_ARDUINO // OK
+// #define DC_VOLT_ARDUINO // OK
+// #define DC_AMP_ARDUINO // OK
 
 #if defined(WATER_ARDUINO)
 #include <SoftwareSerial.h>
@@ -194,7 +194,7 @@ void updateMsgs()
   cmdMessenger.sendCmdStart(id);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdEnd();
-// This needs updating for real life in Flørli
+// This needs updating for real life in Flørli, some are high and others are low, and 512 may not even be a good cutoff
   handleButton(A0, 3, true);
   handleButton(A1, 2, true);
   handleButton(A2, 0, true);
@@ -261,7 +261,7 @@ void setup()
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
 
-  timer.setInterval(5000,updateMsgs);
+  timer.setInterval(500,updateMsgs);
 }
 
 #if defined(BUTTON_ARDUINO)
