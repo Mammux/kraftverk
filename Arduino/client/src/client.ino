@@ -188,13 +188,24 @@ void OnError()
 // nop
 }
 
-void updateMsgs()
+void sendId()
 {
 #if defined(BUTTON_ARDUINO)
   cmdMessenger.sendCmdStart(id);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdEnd();
-// This needs updating for real life in Flørli, some are high and others are low, and 512 may not even be a good cutoff
+#endif	
+
+#if defined(CONTROLS_ARDUINO)
+  cmdMessenger.sendCmdStart(id);
+  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)2);
+  cmdMessenger.sendCmdEnd();
+#endif
+}
+
+void updateMsgs()
+{
+#if defined(BUTTON_ARDUINO)
   handleButton(A0, 3, false);
   handleButton(A1, 2, true);
   handleButton(A2, 0, false);
@@ -202,9 +213,6 @@ void updateMsgs()
 #endif
 
 #if defined(CONTROLS_ARDUINO)
-  cmdMessenger.sendCmdStart(id);
-  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)2);
-  cmdMessenger.sendCmdEnd();
   handleCtrls();
 #endif
 }
@@ -267,13 +275,15 @@ void setup()
   attachCommandCallbacks();
 
 #if defined(BUTTON_ARDUINO)
-  timer.setInterval(100,updateMsgs);
+  // Should possibly be more frequent?
+  timer.setInterval(1000,updateMsgs);
+  timer.setInterval(10*1000,sendId);
 #endif
 
 #if defined(CONTROLS_ARDUINO)
   timer.setInterval(1000,updateMsgs);
+  timer.setInterval(10*1000,sendId);
 #endif
-
 }
 
 #if defined(BUTTON_ARDUINO)
