@@ -282,7 +282,7 @@ void handleButton(uint16_t pin, uint16_t button, bool high)
   int val = analogRead(pin);
   char debug[255];
   sprintf(debug, "Debug: bt %d val %d", button, val);
-  cmdMessenger.sendCmd(error, debug);
+  // cmdMessenger.sendCmd(error, debug);
   if ((val > 512 and high) || (val < 512 and !high)) {
     cmdMessenger.sendCmdStart(button_pressed);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)button);
