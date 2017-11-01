@@ -218,9 +218,9 @@ def mainLoop():
                                 print("c: {}".format(str(c)))
                         try:
                                 msg = c.receive()
+                                handleMessage(msg)
                         except:
-                                print("Receive error");
-                        handleMessage(msg)
+                                print("Unexpected error:", sys.exc_info()[0])
                 if (time.time() - prevTime > 2):
                         stateCommands(msgs)
                         prevTime = time.time()
