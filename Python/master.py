@@ -124,12 +124,12 @@ def handleMessage(msg):
         global shunt
         global water
         
-        if True or __debug__:
-               print("Message: {}".format(str(msg)))
-        
         if msg == None:
                 return;
 
+        if True or __debug__:
+               print("Message: {}".format(str(msg)))
+        
         if msg[0] == "error":
                 print("Error: {}\n".format(msg[1]))
         elif msg[0] == "id":
