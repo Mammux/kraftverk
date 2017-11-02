@@ -184,7 +184,7 @@ def mainLoop():
         
         pygame.mixer.init(frequency=44100, size=-16, channels=6, buffer=4096)
         hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
-        hz_snd.set_volume(1.0)
+        hz_snd.set_volume(0.0)
         hz_snd.play(loops=-1)
 
         hydro_snd = pygame.mixer.Sound("sounds/hydroelectric_loop.wav")
