@@ -124,8 +124,8 @@ def handleMessage(msg):
         global shunt
         global water
         
-        if __debug__:
-               print("handleMessage: {}".format(str(msg)))
+        if True or __debug__:
+               print("Message: {}".format(str(msg)))
         
         if msg == None:
                 return;
