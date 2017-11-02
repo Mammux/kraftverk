@@ -99,6 +99,9 @@ def stateCommands(msgs):
         if __debug__:
                 print("set_hz {}".format(freq));
 
+        if __debug__:
+                print("water {}".format(water));
+
         hydro_snd.set_volume(min(ac_level, water)/255)        
         waterfall_snd.set_volume((255 / water)*0.25);
 
@@ -165,7 +168,9 @@ def handleMessage(msg):
                 elif ctrl == 3:
                         True # demagnetize
                 elif ctrl == 4:
-                        water = max(0,min(255,water+pos))
+                        water = max(0,min(255,water+(pos*5)))
+                elif ctrl == 5:
+                        water = max(0,min(255,water-(pos*5)))
 
 def mainLoop():
         global hydro_snd
