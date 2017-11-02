@@ -27,9 +27,9 @@ commands = [["error", "s"],
 
 def getMessengers():
 	Aports = glob.glob("/dev/ttyACM*")
-	# Uports = glob.glob("/dev/ttyUSB*") # Handles lower-speed RS-485 ports separately
+	Uports = glob.glob("/dev/ttyUSB*") # Handles lower-speed RS-485 ports separately
 	msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0.1,baud_rate=57600),commands) for serial_device in Aports]
-	# msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=2400),commands) for serial_device in Uports]
+	msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0.1,baud_rate=2400),commands) for serial_device in Uports]
 	return msgs
 
 # Initial state of the power plant (on, in case of power failure while running)
