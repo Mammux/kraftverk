@@ -102,12 +102,13 @@ def stateCommands(msgs):
         if __debug__:
                 print("water {}".format(water));
 
-        hydro_snd.set_volume(min(ac_level, water)/255)        
         waterfall_snd.set_volume((water/255)*0.25);
 
         if (water > 200 or water == 0):
+                hydro_snd.set_volume(water/255)        
                 waterpipe_snd.set_volume(0.0)
         else:
+                hydro_snd.set_volume((water/255) * 0.25)        
                 waterpipe_snd.set_volume(0.5)
 
 def handleMessage(msg):
