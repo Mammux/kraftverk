@@ -343,7 +343,7 @@ void loop()
   if (newPosition != oldPosition) {
   // Håpet er at dette sømløst går over RS485
     long diff = newPosition - oldPosition;
-    if (diff > 5) 
+    if (diff >= 5) 
     {
       cmdMessenger.sendCmdStart(control_pos);
       cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)5);
@@ -351,7 +351,7 @@ void loop()
       cmdMessenger.sendCmdEnd();
       oldPosition = newPosition;
     }
-    if (diff < -5)
+    if (diff <= -5)
     {
       cmdMessenger.sendCmdStart(control_pos);
       cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)4);
