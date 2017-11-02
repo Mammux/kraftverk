@@ -342,10 +342,22 @@ void loop()
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
   // Håpet er at dette sømløst går over RS485
-    cmdMessenger.sendCmdStart(control_pos);
-    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)4);
-    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)newPosition - oldPosition);
-    cmdMessenger.sendCmdEnd();
+    long diff = newPosition - oldPosition;
+    if (diff > 0) 
+    {
+      cmdMessenger.sendCmdStart(control_pos);
+      cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)5);
+      cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)diff);
+      cmdMessenger.sendCmdEnd();
+    }
+    else
+    {
+      cmdMessenger.sendCmdStart(control_pos);
+      cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)4);
+      cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)-diff);
+      cmdMessenger.sendCmdEnd();
+    }
+
     oldPosition = newPosition;
   }
 #endif
