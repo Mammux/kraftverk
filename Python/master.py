@@ -34,14 +34,14 @@ def getMessengers():
 
 # Initial state of the power plant (on, in case of power failure while running)
 
-transformer_on = True
-generator_on = True
-dc_on = True
-ac_level = 255 # From 0 (unpowered) to 255 (max capacity)
+transformer_on = False
+generator_on = False
+dc_on = False
+ac_level = 0 # From 0 (unpowered) to 255 (max capacity)
 freq = 50
 adj_res = 0 # 0 to 255 "Innstillingsmotstand", currently not connected
 shunt = 0 # 0 to 255 "Shunt", currently not connected
-water = 255 # 0 to 255 "Water pressure", currently not connected to anything but sound
+water = 0 # 0 to 255 "Water pressure", currently not connected to anything but sound
 
 def stateCommands(msgs):
         global hydro_snd
@@ -108,7 +108,7 @@ def stateCommands(msgs):
         if (water > 50 or water == 0):
                 waterpipe_snd.set_volume(0.0)
         else:
-                waterpipe_snd.set_volume(0.2)
+                waterpipe_snd.set_volume(0.5)
 
 def handleMessage(msg):
         global hydro_snd
