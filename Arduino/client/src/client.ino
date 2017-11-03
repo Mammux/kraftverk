@@ -9,6 +9,7 @@
 // #define HZ_ARDUINO // OK
 // #define DC_VOLT_ARDUINO // OK
 // #define DC_AMP_ARDUINO // OK
+// #define HUB_ARDUINO
 
 #if defined(WATER_ARDUINO)
 #include <SoftwareSerial.h>
@@ -50,13 +51,115 @@ set_vfd,
 set_hz
 };
 
+#if !defined(HUB_ARDUINO)
 // Attach a new CmdMessenger object to the default Serial port
 CmdMessenger cmdMessenger = CmdMessenger(Serial,',',';','/');
+#endif
+
+#if defined(HUB_ARDUINO)
+// 0 is the raspberry, 1-3 are the other arduinos
+// 1: from pi: light_on, light_off, set_vfd, engage_dc_volt, disengage_dc_volt, engage_dc_amp, disengage_dc_amp
+// 2: to pi: button_pressed
+// 3: to pi: control_pos
+// messages from 0 are sent to 1-3, messages from 1-3 are sent to 0
+CmdMessenger msgs[] = {
+  CmdMessenger(Serial),
+  CmdMessenger(Serial1),
+  CmdMessenger(Serial2),
+  CmdMessenger(Serial3)};
+
+// To Pi
+
+void ForwardButtonPressed()
+{
+  uint16_t button = msgs[2].readBinArg<uint16_t>();
+  msgs[0].sendCmdStart(button_pressed);
+  msgs[0].sendCmdBinArg<uint16_t>((uint16_t)button);
+  msgs[0].sendCmdEnd();
+}
+
+void ForwardControlPos()
+{
+  uint16_t control = msgs[3].readBinArg<uint16_t>();
+  uint16_t pos = msgs[3].readBinArg<uint16_t>();
+  msgs[0].sendCmdStart(control_pos);
+  msgs[0].sendCmdBinArg<uint16_t>((uint16_t)control);
+  msgs[0].sendCmdBinArg<uint16_t>((uint16_t)pos);
+  msgs[0].sendCmdEnd();
+}
+
+// From Pi
+
+void ForwardLightOn()
+{
+  uint16_t light = msgs[0].readBinArg<uint16_t>();
+  msgs[1].sendCmdStart(light_on);
+  msgs[1].sendCmdBinArg<uint16_t>((uint16_t)light);
+  msgs[1].sendCmdEnd();
+}
+
+void ForwardLightOff()
+{
+  uint16_t light = msgs[0].readBinArg<uint16_t>();
+  msgs[1].sendCmdStart(light_off);
+  msgs[1].sendCmdBinArg<uint16_t>((uint16_t)light);
+  msgs[1].sendCmdEnd();
+}
+
+void ForwardSetVFD()
+{
+  uint16_t vfd = msgs[0].readBinArg<uint16_t>();
+  msgs[1].sendCmdStart(set_vfd);
+  msgs[1].sendCmdBinArg<uint16_t>((uint16_t)vfd);
+  msgs[1].sendCmdEnd();
+}
+
+void ForwardSetHz()
+{
+  uint16_t hz = msgs[0].readBinArg<uint16_t>();
+  msgs[1].sendCmdStart(set_hz);
+  msgs[1].sendCmdBinArg<uint16_t>((uint16_t)hz);
+  msgs[1].sendCmdEnd();
+}
+
+void ForwardEngageDCVolt()
+{
+  msgs[1].sendCmd(engage_dc_volt);
+}
+
+void ForwardDisengageDCVolt()
+{
+  msgs[1].sendCmd(disengage_dc_volt);
+}
+
+void ForwardEngageDCAmp()
+{
+  msgs[1].sendCmd(engage_dc_amp);
+}
+
+void ForwardDisengageDCAmp()
+{
+  msgs[1].sendCmd(disengage_dc_amp);
+}
+#endif
 
 // Callbacks define on which received commands we take action 
 void attachCommandCallbacks()
 {
+  msgs[0].attach(light_on, ForwardLightOn);
+  msgs[0].attach(light_off, ForwardLightOff);
+  msgs[0].attach(set_vfd, ForwardSetVFD);
+  msgs[0].attach(set_hz, ForwardSetHz);
+  msgs[0].attach(engage_dc_volt, ForwardEngageDCVolt);
+  msgs[0].attach(disengage_dc_volt, ForwardDisengageDCVolt);
+  msgs[0].attach(engage_dc_amp, ForwardEngageDCAmp);
+  msgs[0].attach(disengage_dc_amp, ForwardDisengageDCAmp);
+  msgs[2].attach(button_pressed, ForwardButtonPressed);
+  msgs[3].attach(control_pos, ForwardControlPos);
+
+#if !defined(HUB_ARDUINO)
   cmdMessenger.attach(error, OnError);
+#endif
 
 #if defined(LIGHT_ARDUINO)
   cmdMessenger.attach(light_on, OnLightOn);
@@ -337,8 +440,17 @@ void handleCtrls()
 // Loop function
 void loop() 
 {
+#if !defined(HUB_ARDUINO)
   timer.run();
   cmdMessenger.feedinSerialData();
+#endif
+
+#if defined(HUB_ARDUINO)
+  msgs[0].feedinSerialData();
+  msgs[1].feedinSerialData();
+  msgs[2].feedinSerialData();
+  msgs[3].feedinSerialData();
+#endif
   
 // Water arduino looper stramt
 #if defined(WATER_ARDUINO)
