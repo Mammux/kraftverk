@@ -26,8 +26,8 @@ commands = [["error", "s"],
         ["set_hz", "I"]]
 
 def getMessengers():
-	Aports = glob.glob("/dev/ttyACM*")
-	Uports = glob.glob("/dev/ttyUSB*") # Handles lower-speed RS-485 ports separately
+	Aports = glob.glob("/dev/serial/by-id/usb-1a86*")
+	Uports = glob.glob("/dev/serial/by-id/usb-FTDI*") # Handles lower-speed RS-485 ports separately
 	msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0.1,baud_rate=57600),commands) for serial_device in Aports]
 	msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0.1,baud_rate=2400),commands) for serial_device in Uports]
 	return msgs
@@ -37,7 +37,7 @@ def getMessengers():
 transformer_on = False
 generator_on = False
 dc_on = False
-ac_level = 0 # From 0 (unpowered) to 255 (max capacity)
+ac_level = 200 # From 0 (unpowered) to 255 (max capacity)
 freq = 50
 adj_res = 0 # 0 to 255 "Innstillingsmotstand", currently not connected
 shunt = 0 # 0 to 255 "Shunt", currently not connected
