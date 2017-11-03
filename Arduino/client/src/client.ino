@@ -18,6 +18,11 @@ Encoder myEnc(4, 5);
 long oldPosition = -999;
 #endif
 
+#if defined(VFD_ARDUINO)
+#include <DigiPotX9Cxxx.h> // DigiPot
+DigiPot pot(2,3,4);
+#endif
+
 #if defined(HZ_ARDUINO)
 int hz = 50;
 int strength = 128;
@@ -136,7 +141,8 @@ void OnSetVFD()
   if (level > 255) { level = 255; }
   if (level < 0) { level = 0; }
 #if defined(VFD_ARDUINO) 
-  analogWrite(6, level);
+  int str = (int)(98.0-((level/255.0)*6.0));
+  pot.set(str);
 #else
   strength = level;
 #endif
@@ -234,9 +240,6 @@ void setup()
   Serial.begin(57600); 
 #endif
 
-#if defined(VFD_ARDUINO)
-  pinMode(6, OUTPUT);
-#endif
 
 #if defined(HZ_ARDUINO)
   pinMode(5, OUTPUT);
