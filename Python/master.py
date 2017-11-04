@@ -223,7 +223,7 @@ def mainLoop():
                         if False and __debug__:
                                 print("c: {}".format(str(c)))
                         try:
-                                if (msg.board.comm.in_waiting > 0):
+                                if (c.board.comm.in_waiting > 0):
                                         msg = c.receive()
                                         handleMessage(msg)
                         except KeyboardInterrupt:
