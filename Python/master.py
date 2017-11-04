@@ -117,6 +117,12 @@ def stateCommands(msgs):
                 hydro_snd.set_volume((state['water']/255) * 0.25)        
                 waterpipe_snd.set_volume(0.5)
 
+        if (random.random() < 0.01):
+            creaking_snd.set_volume(0.2)
+
+        if (random.random() > 0.95):
+            creaking_snd.set_volume(0.0)
+
 def handleMessage(msg):
         global hydro_snd
         global creaking_snd
