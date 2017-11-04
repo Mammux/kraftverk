@@ -1,5 +1,39 @@
+#include <Arduino.h>
 #include <CmdMessenger.h>  // CmdMessenger
 #include <SimpleTimer.h>  // SimpleTimer
+#include <SoftwareSerial.h>
+#include <Encoder.h>
+#include <DigiPotX9Cxxx.h> // DigiPot
+void ForwardButtonPressed();
+void ForwardControlPos();
+void ForwardLightOn();
+void ForwardLightOff();
+void ForwardSetVFD();
+void ForwardSetHz();
+void ForwardEngageDCVolt();
+void ForwardDisengageDCVolt();
+void ForwardEngageDCAmp();
+void ForwardDisengageDCAmp();
+void attachCommandCallbacks();
+void OnEngageDCVolt();
+void OnDisengageDCVolt();
+void OnEngageDCAmp();
+void OnDisengageDCAmp();
+void OnLightOn();
+void OnLightOff();
+void OnSetVFD();
+void OnSetHz();
+void updateFreq(int freq);
+void OnError();
+void sendId();
+void updateMsgs();
+void setup();
+void handleButton(uint16_t pin, uint16_t button, bool high);
+void handleCtrls();
+void loop();
+#line 1 "src/client.ino"
+//#include <CmdMessenger.h>  // CmdMessenger
+//#include <SimpleTimer.h>  // SimpleTimer
 
 // #define LIGHT_ARDUINO // OK
 // #define BUTTON_ARDUINO // OK
@@ -12,15 +46,15 @@
 // #define HUB_ARDUINO
 
 #if defined(WATER_ARDUINO)
-#include <SoftwareSerial.h>
-#include <Encoder.h>
+//#include <SoftwareSerial.h>
+//#include <Encoder.h>
 
 Encoder myEnc(4, 5);
 long oldPosition = -999;
 #endif
 
 #if defined(VFD_ARDUINO)
-#include <DigiPotX9Cxxx.h> // DigiPot
+//#include <DigiPotX9Cxxx.h> // DigiPot
 DigiPot pot(2,3,4);
 #endif
 
@@ -69,53 +103,6 @@ CmdMessenger msgs[] = {
   CmdMessenger(Serial3)};
 
 // To Pi
-
-void Error1()
-{
-  char* msg = msgs[1].readStringArg();
-  msgs[0].sendCmd(error, msg);
-}
-
-
-void Error2()
-{
-  char* msg = msgs[2].readStringArg();
-  msgs[0].sendCmd(error, msg);
-}
-
-
-void Error3()
-{
-  char* msg = msgs[3].readStringArg();
-  msgs[0].sendCmd(error, msg);
-}
-
-
-void Id1()
-{
-  uint16_t idid = msgs[1].readBinArg<uint16_t>();
-  msgs[0].sendCmdStart(id);
-  msgs[0].sendCmdBinArg<uint16_t>((uint16_t)idid);
-  msgs[0].sendCmdEnd();
-}
-
-void Id2()
-{
-  uint16_t idid = msgs[2].readBinArg<uint16_t>();
-  msgs[0].sendCmdStart(id);
-  msgs[0].sendCmdBinArg<uint16_t>((uint16_t)idid);
-  msgs[0].sendCmdEnd();
-}
-
-void Id3()
-{
-  uint16_t idid = msgs[3].readBinArg<uint16_t>();
-  msgs[0].sendCmdStart(id);
-  msgs[0].sendCmdBinArg<uint16_t>((uint16_t)idid);
-  msgs[0].sendCmdEnd();
-}
-
-
 
 void ForwardButtonPressed()
 {
@@ -188,28 +175,11 @@ void ForwardDisengageDCAmp()
 {
   msgs[1].sendCmd(disengage_dc_amp);
 }
-
-void Fallback1()
-{
-  msgs[0].sendCmd(error, "Fallback1");
-}
-
-void Fallback2()
-{
-  msgs[0].sendCmd(error, "Fallback2");
-}
-
-void Fallback3()
-{
-  msgs[0].sendCmd(error, "Fallback3");
-}
-
 #endif
 
 // Callbacks define on which received commands we take action 
 void attachCommandCallbacks()
 {
-#if defined(HUB_ARDUINO)
   msgs[0].attach(light_on, ForwardLightOn);
   msgs[0].attach(light_off, ForwardLightOff);
   msgs[0].attach(set_vfd, ForwardSetVFD);
@@ -218,23 +188,8 @@ void attachCommandCallbacks()
   msgs[0].attach(disengage_dc_volt, ForwardDisengageDCVolt);
   msgs[0].attach(engage_dc_amp, ForwardEngageDCAmp);
   msgs[0].attach(disengage_dc_amp, ForwardDisengageDCAmp);
-
   msgs[2].attach(button_pressed, ForwardButtonPressed);
-
   msgs[3].attach(control_pos, ForwardControlPos);
-
-  msgs[1].attach(Fallback1);
-  msgs[1].attach(Id1);
-  msgs[1].attach(Error1);
-
-  msgs[2].attach(Fallback2);
-  msgs[2].attach(Id2);
-  msgs[2].attach(Error2);
-
-  msgs[3].attach(Fallback3);
-  msgs[3].attach(Id3);
-  msgs[3].attach(Error3);
-#endif
 
 #if !defined(HUB_ARDUINO)
   cmdMessenger.attach(error, OnError);
@@ -408,8 +363,10 @@ void updateMsgs()
 // Setup function
 void setup() 
 {
+
   // Wait for master.py to get ready
-  delay(5000);
+  delay(10000);
+
 
   // Listen on serial connection for messages from the PC
   // 115200 is the max speed on Arduino Uno, Mega, with AT8u2 USB
@@ -420,11 +377,6 @@ void setup()
   Serial.begin(57600); 
 #endif
 
-#if defined(HUB_ARDUINO)
-  Serial1.begin(57600);
-  Serial2.begin(57600);
-  Serial3.begin(57600);
-#endif
 
 #if defined(HZ_ARDUINO)
   pinMode(5, OUTPUT);
@@ -528,10 +480,10 @@ void loop()
 #endif
 
 #if defined(HUB_ARDUINO)
-  if (Serial.available()) { msgs[0].feedinSerialData(); }
-  if (Serial1.available()) { msgs[1].feedinSerialData(); }
-  if (Serial2.available()) { msgs[2].feedinSerialData(); }
-  if (Serial3.available()) { msgs[3].feedinSerialData(); }
+  msgs[0].feedinSerialData();
+  msgs[1].feedinSerialData();
+  msgs[2].feedinSerialData();
+  msgs[3].feedinSerialData();
 #endif
   
 // Water arduino looper stramt
