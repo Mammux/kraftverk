@@ -1,9 +1,5 @@
-import glob
-import random, sys
-import PyCmdMessenger
-import pygame
-import time
-from time import sleep
+import glob import random, sys import PyCmdMessenger import pygame
+import time from time import sleep
 
 hydro_snd = None
 creaking_snd = None
