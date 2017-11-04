@@ -232,9 +232,13 @@ def mainLoop():
                         except KeyboardInterrupt:
                                 raise
                         except EOFError:
+                                print("RECOVERABLE ERROR")
+                                sleep(5)
                                 msgs = getMessengers()
                                 break
                         except OSError:
+                                print("RECOVERABLE ERROR")
+                                sleep(5)
                                 msgs = getMessengers()
                                 break
                         except:
