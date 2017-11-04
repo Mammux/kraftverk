@@ -118,6 +118,7 @@ def stateCommands(msgs):
                 waterpipe_snd.set_volume(0.5)
 
         if (random.random() < 0.01):
+            print("CREAKING STARTS")
             creaking_snd.set_volume(0.2)
 
         if (random.random() > 0.95):
