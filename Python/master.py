@@ -104,7 +104,7 @@ def stateCommands(msgs):
 
         waterfall_snd.set_volume((water/255)*0.25);
 
-        if (water > 200 or water == 0):
+        if (water > 50 or water == 0):
                 hydro_snd.set_volume(water/255)        
                 waterpipe_snd.set_volume(0.0)
         else:
