@@ -34,14 +34,16 @@ def getMessengers():
 
 # Initial state of the power plant (on, in case of power failure while running)
 
-transformer_on = True
-generator_on = True
-dc_on = True
-ac_level = 150 # From 0 (unpowered) to 255 (max capacity)
-freq = 50
-adj_res = 0 # 0 to 255 "Innstillingsmotstand", currently not connected
-shunt = 0 # 0 to 255 "Shunt", currently not connected
-water = 150 # 0 to 255 "Water pressure", currently not connected to anything but sound
+state = {
+    'transformer_on' : True,
+    'generator_on' : True,
+    'dc_on' : True,
+    'ac_level' : 150, # From 0 (unpowered) to 255 (max capacity)
+    'freq' : 50,
+    'adj_res' : 0, # 0 to 255 "Innstillingsmotstand", currently not connected
+    'shunt' : 0, # 0 to 255 "Shunt", currently not connected
+    'water' : 150 # 0 to 255 "Water pressure", currently not connected to anything but sound
+    }
 
 def stateCommands(msgs):
         global hydro_snd
@@ -51,16 +53,9 @@ def stateCommands(msgs):
         global waterpipe_snd
         global hz_snd
 
-        global transformer_on 
-        global generator_on 
-        global dc_on 
-        global ac_level
-        global freq
-        global adj_res
-        global shunt
-        global water
+        global state
         
-        if (transformer_on):
+        if (state['transformer_on']):
                 if __debug__:
                         print("transformer on");
                 [msg.send("light_on", 0) for msg in msgs]
@@ -71,7 +66,7 @@ def stateCommands(msgs):
                 [msg.send("light_on", 3) for msg in msgs]
                 [msg.send("light_off", 0) for msg in msgs] 
                 
-        if (generator_on):
+        if (state['generator_on']):
                 if __debug__:
                         print("generator on");
                 [msg.send("light_on", 2) for msg in msgs] 
@@ -89,7 +84,7 @@ def stateCommands(msgs):
                     print("set_vfd {}".format(0));
     
         
-        if (dc_on):
+        if (state['dc_on']):
                 [msg.send("engage_dc_volt") for msg in msgs]
                 if __debug__:
                         print("dc_on");
@@ -98,20 +93,20 @@ def stateCommands(msgs):
                 if __debug__:
                         print("dc_off");
                         
-        [msg.send("set_hz", freq) for msg in msgs]
+        [msg.send("set_hz", state['freq']) for msg in msgs]
         if __debug__:
-                print("set_hz {}".format(freq));
+                print("set_hz {}".format(state['freq']));
 
         if __debug__:
-                print("water {}".format(water));
+                print("water {}".format(state['water']));
 
-        waterfall_snd.set_volume((water/255)*0.25);
+        waterfall_snd.set_volume((state['water']/255)*0.25);
 
-        if (water > 50 or water == 0):
-                hydro_snd.set_volume(water/255)        
+        if (state['water'] > 50 or state['water'] == 0):
+                hydro_snd.set_volume(state['water']/255)        
                 waterpipe_snd.set_volume(0.0)
         else:
-                hydro_snd.set_volume((water/255) * 0.25)        
+                hydro_snd.set_volume((state['water']/255) * 0.25)        
                 waterpipe_snd.set_volume(0.5)
 
 def handleMessage(msg):
@@ -122,14 +117,7 @@ def handleMessage(msg):
         global waterpipe_snd
         global hz_snd
 
-        global transformer_on 
-        global generator_on 
-        global dc_on 
-        global ac_level
-        global freq
-        global adj_res
-        global shunt
-        global water
+        global state
         
         if msg == None:
                 return;
@@ -144,37 +132,37 @@ def handleMessage(msg):
         elif msg[0] == "button_pressed":
                 btn = msg[1][0]
                 if btn == 0: # venstre ut
-                        if (transformer_on):
+                        if (state['transformer_on']):
                                 hz_snd.fadeout(1000);
-                        transformer_on = False
+                        state['transformer_on'] = False
                 elif btn == 1: # venstre inn
-                        if (not transformer_on):
+                        if (not state['transformer_on']):
                                 hz_snd.play(fade_ms=1000);
-                        transformer_on = True
+                        state['transformer_on'] = True
                 elif btn == 2: # høyre ut
-                        generator_on = False
+                        state['generator_on'] = False
                 elif btn == 3: # høyre inn
-                        generator_on = True
+                        state['generator_on'] = True
         elif msg[0] == "control_pos":
                 ctrl = msg[1][0]
                 pos = msg[1][1]
                 if ctrl == 0: # Turbinregulator
                         if pos == 0: # synker
-                                ac_level = max(ac_level-10, 0)
+                                state['ac_level'] = max(state['ac_level']-10, 0)
                         elif pos == 1: # nøytral
                                 True # nop
                         elif pos == 2: # stiger
-                                ac_level = min(ac_level+10, 255)
+                                state['ac_level'] = min(state['ac_level']+10, 255)
                 elif ctrl == 1: # Instillingsmotstand
-                        adj_res = pos
+                        state['adj_res'] = pos
                 elif ctrl == 2:
-                        shunt = pos
+                        state['shunt'] = pos
                 elif ctrl == 3:
                         True # demagnetize
                 elif ctrl == 4:
-                        water = max(0,min(255,water+(pos*5)))
+                        state['water'] = max(0,min(255,state['water']+(pos*5)))
                 elif ctrl == 5:
-                        water = max(0,min(255,water-(pos*5)))
+                        state['water'] = max(0,min(255,state['water']-(pos*5)))
 
 def mainLoop():
         global hydro_snd
@@ -219,7 +207,8 @@ def mainLoop():
         # TODO  Må legge inn noen her som sjekker på nytt (hvet minutt? femte minutt)
         #       om det er nye arduinoer som er koblet til / koblet fra
         
-        prevTime = time.time()
+        prevStateTime = time.time()
+        prevMsgsTime = time.time()
 
         while True:
                 for c in msgs:
@@ -245,9 +234,13 @@ def mainLoop():
                                 print("Unexpected error:", sys.exc_info()[0])
                                 
 
-                if (time.time() - prevTime > 5):
+                if (time.time() - prevStateTime > 5):
                         stateCommands(msgs)
-                        prevTime = time.time()
+                        prevStateTime = time.time()
+
+                if (time.time() - prevMsgsTime > 120):
+                        msgs = getMessengers()
+                        prevMsgsTime = time.time()
 
 mainLoop()
 
