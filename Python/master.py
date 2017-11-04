@@ -1,5 +1,9 @@
-import glob import random, sys import PyCmdMessenger import pygame
-import time from time import sleep
+import glob
+import random, sys
+import PyCmdMessenger
+import pygame
+import time from time
+import sleep
 
 hydro_snd = None
 creaking_snd = None
@@ -10,23 +14,23 @@ hz_snd = None
 
 commands = [["error", "s"],
         ["id", "I"],
-	["button_pressed", "I"],
-	["control_pos", "II"],
-	["light_on", "I"],		
-	["light_off", "I"],		
-	["engage_dc_volt", ""],		
-	["disengage_dc_volt", ""],
-	["engage_dc_amp", ""],	
-	["disengage_dc_amp", ""],	
-	["set_vfd", "I"],
+    ["button_pressed", "I"],
+    ["control_pos", "II"],
+    ["light_on", "I"],      
+    ["light_off", "I"],     
+    ["engage_dc_volt", ""],     
+    ["disengage_dc_volt", ""],
+    ["engage_dc_amp", ""],  
+    ["disengage_dc_amp", ""],   
+    ["set_vfd", "I"],
         ["set_hz", "I"]]
 
 def getMessengers():
-	Aports = glob.glob("/dev/serial/by-id/usb-1a86*")
-	Uports = glob.glob("/dev/serial/by-id/usb-FTDI*") # Handles lower-speed RS-485 ports separately
-	msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0,baud_rate=57600),commands) for serial_device in Aports]
-	msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0,baud_rate=2400),commands) for serial_device in Uports]
-	return msgs
+    Aports = glob.glob("/dev/serial/by-id/usb-1a86*")
+    Uports = glob.glob("/dev/serial/by-id/usb-FTDI*") # Handles lower-speed RS-485 ports separately
+    msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0,baud_rate=57600),commands) for serial_device in Aports]
+    msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,timeout=0,baud_rate=2400),commands) for serial_device in Uports]
+    return msgs
 
 # Initial state of the power plant (on, in case of power failure while running)
 
@@ -220,7 +224,7 @@ def mainLoop():
                                 print("c: {}".format(str(c)))
                         try:
                                 if (msg.board.comm.in_waiting > 0):
-			                msg = c.receive()
+                            msg = c.receive()
                                         handleMessage(msg)
                         except KeyboardInterrupt:
                                 raise
