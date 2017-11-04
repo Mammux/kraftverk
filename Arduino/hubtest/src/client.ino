@@ -63,7 +63,7 @@ CmdMessenger cmdMessenger = CmdMessenger(Serial,',',';','/');
 // 3: to pi: control_pos
 // messages from 0 are sent to 1-3, messages from 1-3 are sent to 0
 CmdMessenger msgs[] = {
-  NULL,
+  CmdMessenger(Serial),
   CmdMessenger(Serial1),
   CmdMessenger(Serial2),
   CmdMessenger(Serial3)};
@@ -389,7 +389,6 @@ void loop()
 #endif
 
 #if defined(HUB_ARDUINO)
-  msgs[0].feedinSerialData();
   msgs[1].feedinSerialData();
   msgs[2].feedinSerialData();
   msgs[3].feedinSerialData();
