@@ -228,6 +228,8 @@ def mainLoop():
                                         handleMessage(msg)
                         except KeyboardInterrupt:
                                 raise
+                        except EOFError:
+                                raise
                         except:
                                 print("Unexpected error:", sys.exc_info()[0])
                                 
