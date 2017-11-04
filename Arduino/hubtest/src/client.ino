@@ -97,18 +97,18 @@ void Id3()
 void attachCommandCallbacks()
 {
   msgs1.attach(Fallback1);
-  msgs1.attach(Id1);
-  msgs1.attach(Error1);
+  msgs1.attach(id, Id1);
+  msgs1.attach(error, Error1);
 
   msgs2.attach(button_pressed, ForwardButtonPressed);
   msgs2.attach(Fallback2);
-  msgs2.attach(Id2);
-  msgs2.attach(Error2);
+  msgs2.attach(id, Id2);
+  msgs2.attach(error, Error2);
 
   msgs3.attach(control_pos, ForwardControlPos);
   msgs3.attach(Fallback3);
-  msgs3.attach(Id3);
-  msgs3.attach(Error3);
+  msgs3.attach(id, Id3);
+  msgs3.attach(error, Error3);
 }
 
 void Fallback1()

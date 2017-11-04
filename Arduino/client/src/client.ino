@@ -224,16 +224,16 @@ void attachCommandCallbacks()
   msgs[3].attach(control_pos, ForwardControlPos);
 
   msgs[1].attach(Fallback1);
-  msgs[1].attach(Id1);
-  msgs[1].attach(Error1);
+  msgs[1].attach(id, Id1);
+  msgs[1].attach(error, Error1);
 
   msgs[2].attach(Fallback2);
-  msgs[2].attach(Id2);
-  msgs[2].attach(Error2);
+  msgs[2].attach(id, Id2);
+  msgs[2].attach(error, Error2);
 
   msgs[3].attach(Fallback3);
-  msgs[3].attach(Id3);
-  msgs[3].attach(Error3);
+  msgs[3].attach(id, Id3);
+  msgs[3].attach(error, Error3);
 #endif
 
 #if !defined(HUB_ARDUINO)
