@@ -146,6 +146,7 @@ void ForwardDisengageDCAmp()
 // Callbacks define on which received commands we take action 
 void attachCommandCallbacks()
 {
+#if defined(HUB_ARDUINO)
   msgs[0].attach(light_on, ForwardLightOn);
   msgs[0].attach(light_off, ForwardLightOff);
   msgs[0].attach(set_vfd, ForwardSetVFD);
@@ -156,6 +157,7 @@ void attachCommandCallbacks()
   msgs[0].attach(disengage_dc_amp, ForwardDisengageDCAmp);
   msgs[2].attach(button_pressed, ForwardButtonPressed);
   msgs[3].attach(control_pos, ForwardControlPos);
+#endif
 
 #if !defined(HUB_ARDUINO)
   cmdMessenger.attach(error, OnError);
@@ -329,10 +331,8 @@ void updateMsgs()
 // Setup function
 void setup() 
 {
-
   // Wait for master.py to get ready
-  delay(10000);
-
+  delay(5000);
 
   // Listen on serial connection for messages from the PC
   // 115200 is the max speed on Arduino Uno, Mega, with AT8u2 USB
@@ -343,6 +343,11 @@ void setup()
   Serial.begin(57600); 
 #endif
 
+#if defined(HUB_ARDUINO)
+  Serial1.begin(57600);
+  Serial2.begin(57600);
+  Serial3.begin(57600);
+#endif
 
 #if defined(HZ_ARDUINO)
   pinMode(5, OUTPUT);
