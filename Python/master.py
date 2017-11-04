@@ -79,9 +79,9 @@ def stateCommands(msgs):
                         print("generator on");
                 [msg.send("light_on", 2) for msg in msgs] 
                 [msg.send("light_off", 1) for msg in msgs]
-                [msg.send("set_vfd", ac_level) for msg in msgs]
+                [msg.send("set_vfd", state['ac_level']) for msg in msgs]
                 if __debug__:
-                    print("set_vfd {}".format(ac_level));
+                    print("set_vfd {}".format(state['ac_level']));
         else:
                 if __debug__:
                         print("generator off");
