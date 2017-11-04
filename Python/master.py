@@ -233,9 +233,13 @@ def mainLoop():
                                 raise
                         except EOFError:
                                 raise
+                        except OSError:
+                                msgs = getMessengers()
+                                break
                         except:
                                 print("Unexpected error:", sys.exc_info()[0])
                                 
+
                 if (time.time() - prevTime > 5):
                         stateCommands(msgs)
                         prevTime = time.time()
