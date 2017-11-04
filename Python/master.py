@@ -76,11 +76,18 @@ def stateCommands(msgs):
                         print("generator on");
                 [msg.send("light_on", 2) for msg in msgs] 
                 [msg.send("light_off", 1) for msg in msgs]
+                [msg.send("set_vfd", ac_level) for msg in msgs]
+                if __debug__:
+                    print("set_vfd {}".format(ac_level));
         else:
                 if __debug__:
                         print("generator off");
                 [msg.send("light_on", 1) for msg in msgs]
                 [msg.send("light_off", 2) for msg in msgs] 
+                [msg.send("set_vfd", 0) for msg in msgs]
+                if __debug__:
+                    print("set_vfd {}".format(0));
+    
         
         if (dc_on):
                 [msg.send("engage_dc_volt") for msg in msgs]
@@ -91,16 +98,6 @@ def stateCommands(msgs):
                 if __debug__:
                         print("dc_off");
                         
-        if (generator):
-            [msg.send("set_vfd", ac_level) for msg in msgs]
-            if __debug__:
-                    print("set_vfd {}".format(ac_level));
-        else:
-            [msg.send("set_vfd", 0) for msg in msgs]
-            if __debug__:
-                    print("set_vfd {}".format(0));
-    
-        
         [msg.send("set_hz", freq) for msg in msgs]
         if __debug__:
                 print("set_hz {}".format(freq));
