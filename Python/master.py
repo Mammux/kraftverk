@@ -2,7 +2,8 @@ import glob
 import random, sys
 import PyCmdMessenger
 import pygame
-import time 
+import time
+import pickle
 from time import sleep
 
 hydro_snd = None
@@ -34,7 +35,13 @@ def getMessengers():
 
 # Initial state of the power plant (on, in case of power failure while running)
 
-state = {
+
+try:
+    state = pickle.load( open("state.p", "rb"))
+    print("Loaded stored values")
+except FileNotFoundError:
+    print("Using default state values")
+    state = {
     'transformer_on' : True,
     'generator_on' : True,
     'dc_on' : True,
@@ -44,6 +51,7 @@ state = {
     'shunt' : 0, # 0 to 255 "Shunt", currently not connected
     'water' : 150 # 0 to 255 "Water pressure", currently not connected to anything but sound
     }
+            
 
 def stateCommands(msgs):
         global hydro_snd
@@ -221,12 +229,12 @@ def mainLoop():
                         except KeyboardInterrupt:
                                 raise
                         except EOFError:
-                                print("RECOVERABLE ERROR")
+                                print("RECOVERABLE ERROR: EOFError")
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
                         except OSError:
-                                print("RECOVERABLE ERROR")
+                                print("RECOVERABLE ERROR: OSError")
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
@@ -239,6 +247,7 @@ def mainLoop():
                         prevStateTime = time.time()
 
                 if (time.time() - prevMsgsTime > 120):
+                        pickle.dump(state, open("state.p", "wb"))
                         msgs = getMessengers()
                         prevMsgsTime = time.time()
 
