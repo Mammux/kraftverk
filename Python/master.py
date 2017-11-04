@@ -224,8 +224,8 @@ def mainLoop():
                                 print("c: {}".format(str(c)))
                         try:
                                 if (msg.board.comm.in_waiting > 0):
-					msg = c.receive()
-                                	handleMessage(msg)
+			                msg = c.receive()
+                                        handleMessage(msg)
                         except KeyboardInterrupt:
                                 raise
                         except:
