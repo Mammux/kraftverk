@@ -93,7 +93,7 @@ def stateCommands(msgs):
                         
         [msg.send("set_vfd", ac_level) for msg in msgs]
         if __debug__:
-                print("set_vfd {}".format(ac_level));
+                print("set_vfd {}".format(generator?ac_level:0));
         
         [msg.send("set_hz", freq) for msg in msgs]
         if __debug__:
