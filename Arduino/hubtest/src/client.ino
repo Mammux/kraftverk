@@ -103,9 +103,9 @@ void setup()
 // Loop function
 void loop() 
 {
-  msgs[1].feedinSerialData();
-  msgs[2].feedinSerialData();
-  msgs[3].feedinSerialData();
+  if (Serial1.available()) { msgs[1].feedinSerialData(); }
+  if (Serial2.available()) { msgs[2].feedinSerialData(); }
+  if (Serial3.available()) { msgs[3].feedinSerialData(); }
 }
 
 
