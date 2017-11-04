@@ -1,9 +1,4 @@
 #include <CmdMessenger.h>  // CmdMessenger
-#include <SimpleTimer.h>  // SimpleTimer
-
-#define HUB_ARDUINO 
-
-
 
 // Commands
 
@@ -28,40 +23,92 @@ set_hz
 // 2: to pi: button_pressed
 // 3: to pi: control_pos
 // messages from 0 are sent to 1-3, messages from 1-3 are sent to 0
-CmdMessenger msgs[] = {
-  CmdMessenger(Serial),
-  CmdMessenger(Serial1),
-  CmdMessenger(Serial2),
-  CmdMessenger(Serial3)};
+CmdMessenger msgs1 = CmdMessenger(Serial1);
+CmdMessenger msgs2 = CmdMessenger(Serial2);
+CmdMessenger msgs3 = CmdMessenger(Serial3);
+
 
 // To Pi
 
 void ForwardButtonPressed()
 {
-  uint16_t button = msgs[2].readBinArg<uint16_t>();
-  Serial.print("forwardButtonPressed");
-  Serial.print(button);
+  uint16_t button = msgs2.readBinArg<uint16_t>();
+  Serial.print("forwardButtonPressed ");
+  Serial.println(button);
 }
 
 void ForwardControlPos()
 {
-  uint16_t control = msgs[3].readBinArg<uint16_t>();
-  uint16_t pos = msgs[3].readBinArg<uint16_t>();
-  Serial.print("forwardControlPos");
+  uint16_t control = msgs3.readBinArg<uint16_t>();
+  uint16_t pos = msgs3.readBinArg<uint16_t>();
+  Serial.print("forwardControlPos ");
   Serial.print(control);
-  Serial.print(pos);
+  Serial.print(" ");
+  Serial.println(pos);
 }
+
+void Error1()
+{
+  char* msg = msgs1.readStringArg();
+  Serial.print("error: ");
+  Serial.println(msg);
+}
+
+
+void Error2()
+{
+  char* msg = msgs2.readStringArg();
+  Serial.print("error: ");
+  Serial.println(msg);
+}
+
+
+void Error3()
+{
+  char* msg = msgs3.readStringArg();
+  Serial.print("error: ");
+  Serial.println(msg);
+}
+
+
+void Id1()
+{
+  uint16_t id = msgs1.readBinArg<uint16_t>();
+  Serial.print("id: ");
+  Serial.println(id);
+}
+
+void Id2()
+{
+  uint16_t id = msgs2.readBinArg<uint16_t>();
+  Serial.print("id: ");
+  Serial.println(id);
+}
+
+void Id3()
+{
+  uint16_t id = msgs3.readBinArg<uint16_t>();
+  Serial.print("id: ");
+  Serial.println(id);
+}
+
 
 // Callbacks define on which received commands we take action 
 void attachCommandCallbacks()
 {
-  msgs[1].attach(Fallback1);
+  msgs1.attach(Fallback1);
+  msgs1.attach(Id1);
+  msgs1.attach(Error1);
 
-  msgs[2].attach(button_pressed, ForwardButtonPressed);
-  msgs[2].attach(Fallback2);
+  msgs2.attach(button_pressed, ForwardButtonPressed);
+  msgs2.attach(Fallback2);
+  msgs2.attach(Id2);
+  msgs2.attach(Error2);
 
-  msgs[3].attach(control_pos, ForwardControlPos);
-  msgs[3].attach(Fallback3);
+  msgs3.attach(control_pos, ForwardControlPos);
+  msgs3.attach(Fallback3);
+  msgs3.attach(Id3);
+  msgs3.attach(Error3);
 }
 
 void Fallback1()
@@ -80,7 +127,6 @@ void Fallback3()
   Serial.println("Fallback3");
 }
 
-
 // Setup function
 void setup() 
 {
@@ -97,15 +143,14 @@ void setup()
 
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
-
 }
 
 // Loop function
 void loop() 
 {
-  if (Serial1.available()) { msgs[1].feedinSerialData(); }
-  if (Serial2.available()) { msgs[2].feedinSerialData(); }
-  if (Serial3.available()) { msgs[3].feedinSerialData(); }
+  if (Serial1.available()) { msgs1.feedinSerialData(); }
+  if (Serial2.available()) { msgs2.feedinSerialData(); }
+  if (Serial3.available()) { msgs3.feedinSerialData(); }
 }
 
 
