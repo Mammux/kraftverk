@@ -91,9 +91,10 @@ void ForwardControlPos()
 // Callbacks define on which received commands we take action 
 void attachCommandCallbacks()
 {
+#if defined(HUB_ARDUINO)
   msgs[2].attach(button_pressed, ForwardButtonPressed);
   msgs[3].attach(control_pos, ForwardControlPos);
-}
+#endif
 
 #if !defined(HUB_ARDUINO)
   cmdMessenger.attach(error, OnError);
