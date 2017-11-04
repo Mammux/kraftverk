@@ -50,7 +50,7 @@ void ForwardControlPos()
 void Error1()
 {
   char* msg = msgs1.readStringArg();
-  Serial.print("error: ");
+  Serial.print("error1: ");
   Serial.println(msg);
 }
 
@@ -58,7 +58,7 @@ void Error1()
 void Error2()
 {
   char* msg = msgs2.readStringArg();
-  Serial.print("error: ");
+  Serial.print("error2: ");
   Serial.println(msg);
 }
 
@@ -66,7 +66,7 @@ void Error2()
 void Error3()
 {
   char* msg = msgs3.readStringArg();
-  Serial.print("error: ");
+  Serial.print("error3: ");
   Serial.println(msg);
 }
 
@@ -74,21 +74,21 @@ void Error3()
 void Id1()
 {
   uint16_t id = msgs1.readBinArg<uint16_t>();
-  Serial.print("id: ");
+  Serial.print("id1: ");
   Serial.println(id);
 }
 
 void Id2()
 {
   uint16_t id = msgs2.readBinArg<uint16_t>();
-  Serial.print("id: ");
+  Serial.print("id2: ");
   Serial.println(id);
 }
 
 void Id3()
 {
   uint16_t id = msgs3.readBinArg<uint16_t>();
-  Serial.print("id: ");
+  Serial.print("id3: ");
   Serial.println(id);
 }
 
@@ -113,9 +113,8 @@ void attachCommandCallbacks()
 
 void Fallback1()
 {
-  Serial.println("Fallback2");
+  Serial.println("Fallback1");
 }
-
 
 void Fallback2()
 {
