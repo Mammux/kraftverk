@@ -232,7 +232,8 @@ def mainLoop():
                         except KeyboardInterrupt:
                                 raise
                         except EOFError:
-                                raise
+                                msgs = getMessengers()
+                                break
                         except OSError:
                                 msgs = getMessengers()
                                 break
