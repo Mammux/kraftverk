@@ -1,2 +1,7 @@
-git pull origin master && python3 master.py
+git pull origin master
+while :
+do
+  python3 master.py
+done
+
 
