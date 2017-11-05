@@ -179,6 +179,11 @@ def stateCommands(msgs):
         creaking_snd.set_volume(state['creaking'])
 
         if (prevHz != state['freq'] or prevStrength != state['ac_level']):
+
+          if (state['ac_level'] == 0):
+            sd.stop()
+            prevStrength = 0
+            break
       
           fs = 44100
           length = 120
