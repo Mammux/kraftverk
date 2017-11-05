@@ -88,6 +88,8 @@ def getMessengers():
 # Initial state of the power plant 
 
 state = multiprocessing.Manager().dict()
+prevHz = 50
+prevStrength = 255
 
 defState = {
     'transformer_on' : True,
@@ -176,11 +178,14 @@ def stateCommands(msgs):
 
         creaking_snd.set_volume(state['creaking'])
 
+        if (prevHz != state['freq'] or prevStrength != state['ac_level']):
       
-        fs = 44100
-        length = 10
-        stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
-        sd.play(stuff,loop=True,device=0)
+          fs = 44100
+          length = 120
+          stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
+          sd.play(stuff,loop=True,device=0)
+          prevHz = state['freq']
+          prevStrength = state['ac_level']
 
 def handleMessage(msg):
         global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
