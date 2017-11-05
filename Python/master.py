@@ -175,9 +175,10 @@ def stateCommands(msgs):
                 waterpipe_snd.set_volume(0.5)
 
         creaking_snd.set_volume(state['creaking'])
-    
+
+      
         fs = 44100
-        length = 1
+        length = 10
         stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
         sd.play(stuff,loop=True,device=0)
 
