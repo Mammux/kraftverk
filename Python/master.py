@@ -182,13 +182,11 @@ def stateCommands(msgs):
 
           if (state['ac_level'] == 0):
             sd.stop()
-            prevStrength = 0
-            break
-      
-          fs = 44100
-          length = 120
-          stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
-          sd.play(stuff,loop=True,device=0)
+          else:
+            fs = 44100
+            length = 120
+            stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
+            sd.play(stuff,loop=True,device=0)
           prevHz = state['freq']
           prevStrength = state['ac_level']
 
