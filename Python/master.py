@@ -95,7 +95,7 @@ defState = {
     'transformer_on' : True,
     'generator_on' : True,
     'dc_on' : True,
-    'ac_level' : 150, # From 0 (unpowered) to 255 (max capacity)
+    'ac_level' : 200, # From 0 (unpowered) to 255 (max capacity)
     'freq' : 50,
     'adj_res' : 0, # 0 to 255 "Innstillingsmotstand", currently not connected
     'shunt' : 0, # 0 to 255 "Shunt", currently not connected
