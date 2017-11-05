@@ -290,14 +290,14 @@ def mainLoop():
                         except EOFError:
                                 if (FAIL_EARLY): raise
                                 print("RECOVERABLE ERROR: EOFError: %s" % c)
-                                print("Error: %s" % sys.exc_info())
+                                print("Error: %s" % sys.exc_info()[0])
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
                         except OSError:
                                 if (FAIL_EARLY): raise
                                 print("RECOVERABLE ERROR: OSError: %s" % c)
-                                print("Error: %s" % sys.exc_info())
+                                print("Error: %s" % sys.exc_info()[0])
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
