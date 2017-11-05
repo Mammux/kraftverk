@@ -274,9 +274,9 @@ def mainLoop():
         while True:
                 for c in msgs:
                         if __debug__:
-                                print("c: {}".format(str(c)))
-                                print("c: {}".format(str(c.board)))
-                                print("c: {}".format(str(c.board.connected)))
+                                if (c == None): print("no c")
+                                if (c.board == None): print("no c.board")
+                                if (c.board.connected == False): print("c: {}".format(str(c.board.connected)))
                         try:
                                 if (c.board.comm.in_waiting > 0):
                                         msg = c.receive()
