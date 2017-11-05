@@ -417,7 +417,7 @@ void setup()
 #if defined(WATER_ARDUINO)
   Serial.begin(2400); // Slow (safe) RS485
 #else
-  Serial.begin(57600); 
+  Serial.begin(14400); 
 #endif
 
 #if defined(HUB_ARDUINO)
