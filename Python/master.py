@@ -274,9 +274,11 @@ def mainLoop():
         while True:
                 for c in msgs:
                         if __debug__:
-                                if (c == None): print("no c")
-                                if (c.board == None): print("no c.board")
-                                if (c.board.connected == False): print("c: {}".format(str(c.board.connected)))
+                                if (c == None): print("%s: no c" % (c))
+                                if (c.board == None): print("%s: !c.board" % (c))
+                                if (c.board.connected == False): print("%s: !c.board.connected" % (c))
+                                if (c.board.comm == None): print("%s: !c.board.comm" % (c))
+                                if (c.board.comm.is_open == False): print("%s: !c.board.comm.is_open") % (c))
                         try:
                                 if (c.board.comm.in_waiting > 0):
                                         msg = c.receive()
