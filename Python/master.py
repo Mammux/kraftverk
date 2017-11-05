@@ -120,7 +120,7 @@ for key in defState:
 
 def stateCommands(msgs):
         global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
-        global state
+        global state, prevHz, prevStrength
         
         if (state['transformer_on']):
                 if __debug__:
