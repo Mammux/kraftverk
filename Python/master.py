@@ -233,7 +233,7 @@ def handleMessage(msg):
 def mainLoop():
         global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
 
-        Process(target=server).start()
+#        Process(target=server).start()
         
         msgs = getMessengers()
         
