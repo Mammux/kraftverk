@@ -5,6 +5,12 @@ import pygame
 import time
 import pickle
 from time import sleep
+import zmq
+import multiprocessing
+from  multiprocessing import Process
+import soundfile as sf
+import sounddevice as sd
+import numpy as np
 
 hydro_snd = None
 creaking_snd = None
@@ -15,16 +21,60 @@ hz_snd = None
 
 commands = [["error", "s"],
         ["id", "I"],
-    ["button_pressed", "I"],
-    ["control_pos", "II"],
-    ["light_on", "I"],      
-    ["light_off", "I"],     
-    ["engage_dc_volt", ""],     
-    ["disengage_dc_volt", ""],
-    ["engage_dc_amp", ""],  
-    ["disengage_dc_amp", ""],   
-    ["set_vfd", "I"],
+        ["button_pressed", "I"],
+        ["control_pos", "II"],
+        ["light_on", "I"],      
+        ["light_off", "I"],     
+        ["engage_dc_volt", ""],     
+        ["disengage_dc_volt", ""],
+        ["engage_dc_amp", ""],  
+        ["disengage_dc_amp", ""],   
+        ["set_vfd", "I"],
         ["set_hz", "I"]]
+
+# volume: 0.0 to 1.0
+def hzData(volume, fs, duration, f):
+  return (np.sin(2*np.pi*np.arange(fs*duration)*f/fs) * int(volume * 16384)).astype(np.float32)
+
+def server():
+    global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
+    global state
+    
+    port = 5556
+    context = zmq.Context()
+    socket = context.socket(zmq.REP)
+    socket.bind("tcp://*:%s" % port)
+    print ("Running server on port: ", port)
+    while True:
+        # Wait for next request from client
+        message = socket.recv()
+        print ("Received request: %s" % (message))
+        tokens = message.split()
+        if (tokens[0] == b"get_hz"):
+            socket.send_string("Svar fra master, %d Hz på port %s" % (state['freq'], port))
+        elif (tokens[0] == b"set_hz" and len(tokens) == 2):
+            state['freq'] = int(tokens[1])
+            socket.send_string("Svar fra master, har satt %d Hz på port %s" % (state['freq'], port))
+        elif (tokens[0] == b"get_vfd"):
+            socket.send_string("Svar fra master, %d%% VFD på port %s" % (state['ac_level'], port))
+        elif (tokens[0] == b"set_vfd" and len(tokens) == 2):
+            state['ac_level'] = int(tokens[1])
+            socket.send_string("Svar fra master, har satt %d%% VFD på port %s" % (state['ac_level'], port))
+        elif (tokens[0] == b"get_water"):
+            socket.send_string("Svar fra master, %d water på port %s" % (state['water'], port))
+        elif (tokens[0] == b"set_water" and len(tokens) == 2):
+            state['water'] = int(tokens[1])
+            socket.send_string("Svar fra master, har satt %d water på port %s" % (state['water'], port))
+        elif (tokens[0] == b"creaking" and len(tokens) == 2):
+            creak_level = float(tokens[1])
+            socket.send_string("Svar fra master, har satt creaking vol %f på port %s" % (creak_level, port))
+            state['creaking'] = creak_level
+        elif (tokens[0] == b"damming" and len(tokens) == 2):
+            dam_level = float(tokens[1])
+            socket.send_string("Svar fra master, har satt damming vol %f på port %s" % (dam_level, port))
+            state['damming'] = dam_level
+        else:
+            socket.send_string("Error: %s" % str(tokens))
 
 def getMessengers():
     Aports = glob.glob("/dev/serial/by-id/usb-1a86*")
@@ -33,15 +83,11 @@ def getMessengers():
     msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=2400),commands) for serial_device in Uports]
     return msgs
 
-# Initial state of the power plant (on, in case of power failure while running)
+# Initial state of the power plant 
 
+state = multiprocessing.Manager().dict()
 
-try:
-    state = pickle.load( open("state.p", "rb"))
-    print("Loaded stored values")
-except FileNotFoundError:
-    print("Using default state values")
-    state = {
+defState = {
     'transformer_on' : True,
     'generator_on' : True,
     'dc_on' : True,
@@ -49,18 +95,27 @@ except FileNotFoundError:
     'freq' : 50,
     'adj_res' : 0, # 0 to 255 "Innstillingsmotstand", currently not connected
     'shunt' : 0, # 0 to 255 "Shunt", currently not connected
-    'water' : 150 # 0 to 255 "Water pressure", currently not connected to anything but sound
+    'water' : 150, # 0 to 255 "Water pressure", currently not connected to anything but sound
+    'creaking' : 0.0,
+    'damming' : 0.0
     }
-            
+
+fileState = {'bogus':0}
+
+try:
+    fileState = pickle.load( open("state.p", "rb"))
+    print("Loaded stored values")
+except FileNotFoundError:
+    print("File not found, using default state values")
+
+for key in defState:
+    try:
+        state[key] = fileState[key]
+    except:
+        state[key] = defState[key]
 
 def stateCommands(msgs):
-        global hydro_snd
-        global creaking_snd
-        global dam_snd
-        global waterfall_snd
-        global waterpipe_snd
-        global hz_snd
-
+        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
         global state
         
         if (state['transformer_on']):
@@ -117,21 +172,15 @@ def stateCommands(msgs):
                 hydro_snd.set_volume((state['water']/255) * 0.25)        
                 waterpipe_snd.set_volume(0.5)
 
-        if (random.random() < 0.01):
-            print("CREAKING STARTS")
-            creaking_snd.set_volume(0.2)
-
-        if (random.random() > 0.95):
-            creaking_snd.set_volume(0.0)
+        creaking_snd.set_volume(state['creaking'])
+    
+        fs = 44100
+        length = 1
+        stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
+        sd.play(stuff,loop=True,device='default')
 
 def handleMessage(msg):
-        global hydro_snd
-        global creaking_snd
-        global dam_snd
-        global waterfall_snd
-        global waterpipe_snd
-        global hz_snd
-
+        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
         global state
         
         if msg == None:
@@ -180,12 +229,9 @@ def handleMessage(msg):
                         state['water'] = max(0,min(255,state['water']-(pos*5)))
 
 def mainLoop():
-        global hydro_snd
-        global creaking_snd
-        global dam_snd
-        global waterfall_snd
-        global waterpipe_snd
-        global hz_snd
+        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
+
+        Process(target=server).start()
         
         msgs = getMessengers()
         
