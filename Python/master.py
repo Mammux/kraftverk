@@ -12,7 +12,7 @@ import soundfile as sf
 import sounddevice as sd
 import numpy as np
 
-FAIL_EARLY = True
+FAIL_EARLY = False
 
 hydro_snd = None
 creaking_snd = None
