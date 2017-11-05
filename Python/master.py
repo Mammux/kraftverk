@@ -12,6 +12,8 @@ import soundfile as sf
 import sounddevice as sd
 import numpy as np
 
+FAIL_EARLY = True
+
 hydro_snd = None
 creaking_snd = None
 dam_snd = None
@@ -286,11 +288,13 @@ def mainLoop():
                         except KeyboardInterrupt:
                                 raise
                         except EOFError:
+                                if (FAIL_EARLY): raise
                                 print("RECOVERABLE ERROR: EOFError")
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
                         except OSError:
+                                if (FAIL_EARLY): raise
                                 print("RECOVERABLE ERROR: OSError")
                                 sleep(5)
                                 msgs = getMessengers()
@@ -305,8 +309,9 @@ def mainLoop():
 
                 if (time.time() - prevMsgsTime > 120):
                         pickle.dump(state, open("state.p", "wb"))
-                        msgs = getMessengers()
+                        if (not FAIL_EARLY): msgs = getMessengers()
                         prevMsgsTime = time.time()
+#endif                        
 
 mainLoop()
 
