@@ -287,17 +287,17 @@ def mainLoop():
                                         handleMessage(msg)
                         except KeyboardInterrupt:
                                 raise
-                        except EOFError:
+                        except EOFError as err:
                                 if (FAIL_EARLY): raise
-                                print("RECOVERABLE ERROR: EOFError: %s" % c)
-                                print("Error: %s" % sys.exc_info()[0])
+                                print("RECOVERABLE ERROR: EOFError: %s" % c.board.device)
+                                print("Error: %s" % err)
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
-                        except OSError:
+                        except OSError as err:
                                 if (FAIL_EARLY): raise
-                                print("RECOVERABLE ERROR: OSError: %s" % c)
-                                print("Error: %s" % sys.exc_info()[0])
+                                print("RECOVERABLE ERROR: OSError: %s" % c.board.device)
+                                print("Error: %s" % err)
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
