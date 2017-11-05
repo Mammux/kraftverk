@@ -310,6 +310,7 @@ def mainLoop():
                         prevStateTime = time.time()
 
                 if (time.time() - prevMsgsTime > 120):
+                        print("Dumping state and recreating messengers")
                         pickle.dump(state, open("state.p", "wb"))
                         if (not FAIL_EARLY): msgs = getMessengers()
                         prevMsgsTime = time.time()
