@@ -105,7 +105,7 @@ defState = {
 fileState = {'bogus':0}
 
 try:
-    fileState = pickle.load( open("state.p", "rb"))
+    fileState = pickle.load( open("/home/pi/github/kraftverk/Python/state.p", "rb"))
     print("Loaded stored values")
 except FileNotFoundError:
     print("File not found, using default state values")
