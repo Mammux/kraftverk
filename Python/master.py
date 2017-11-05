@@ -179,7 +179,7 @@ def stateCommands(msgs):
         fs = 44100
         length = 1
         stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
-        sd.play(stuff,loop=True,device='default')
+        sd.play(stuff,loop=True,device=0)
 
 def handleMessage(msg):
         global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
