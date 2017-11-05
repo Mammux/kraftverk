@@ -278,7 +278,7 @@ def mainLoop():
                                 if (c.board == None): print("%s: !c.board" % (c))
                                 if (c.board.connected == False): print("%s: !c.board.connected" % (c))
                                 if (c.board.comm == None): print("%s: !c.board.comm" % (c))
-                                if (c.board.comm.is_open == False): print("%s: !c.board.comm.is_open") % (c))
+                                if (c.board.comm.is_open == False): print("%s: !c.board.comm.is_open" % (c))
                         try:
                                 if (c.board.comm.in_waiting > 0):
                                         msg = c.receive()
