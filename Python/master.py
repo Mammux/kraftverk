@@ -273,8 +273,10 @@ def mainLoop():
 
         while True:
                 for c in msgs:
-                        if False and __debug__:
+                        if __debug__:
                                 print("c: {}".format(str(c)))
+                                print("c: {}".format(str(c.board)))
+                                print("c: {}".format(str(c.board.connected)))
                         try:
                                 if (c.board.comm.in_waiting > 0):
                                         msg = c.receive()
