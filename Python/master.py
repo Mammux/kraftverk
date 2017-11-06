@@ -8,8 +8,8 @@ from time import sleep
 import zmq
 import multiprocessing
 from  multiprocessing import Process
-import soundfile as sf
-import sounddevice as sd
+# import soundfile as sf
+# import sounddevice as sd
 import numpy as np
 
 FAIL_EARLY = False
@@ -95,11 +95,11 @@ defState = {
     'transformer_on' : True,
     'generator_on' : True,
     'dc_on' : True,
-    'ac_level' : 200, # From 0 (unpowered) to 255 (max capacity)
+    'ac_level' : 255, # From 0 (unpowered) to 255 (max capacity)
     'freq' : 50,
     'adj_res' : 0, # 0 to 255 "Innstillingsmotstand", currently not connected
     'shunt' : 0, # 0 to 255 "Shunt", currently not connected
-    'water' : 150, # 0 to 255 "Water pressure", currently not connected to anything but sound
+    'water' : 255, # 0 to 255 "Water pressure", currently not connected to anything but sound
     'creaking' : 0.0,
     'damming' : 0.0
     }
@@ -178,17 +178,17 @@ def stateCommands(msgs):
 
         creaking_snd.set_volume(state['creaking'])
 
-        if (prevHz != state['freq'] or prevStrength != state['ac_level']):
+        # if (prevHz != state['freq'] or prevStrength != state['ac_level']):
 
-          if (state['ac_level'] == 0):
-            sd.stop()
-          else:
-            fs = 44100
-            length = 120
-            stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
-            sd.play(stuff,loop=True,device=0)
-          prevHz = state['freq']
-          prevStrength = state['ac_level']
+          # if (state['ac_level'] == 0 or True):
+          #  sd.stop()
+         # else:
+         #   fs = 44100
+        #    length = 120
+       #     stuff = hzData(min(state['ac_level'],state['water']) / 255, fs, length, state['freq'])
+       #     sd.play(stuff,loop=True,device=0)
+       #   prevHz = state['freq']
+      #    prevStrength = state['ac_level']
 
 def handleMessage(msg):
         global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
@@ -242,7 +242,7 @@ def handleMessage(msg):
 def mainLoop():
         global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
 
-#        Process(target=server).start()
+        Process(target=server).start()
         
         msgs = getMessengers()
         

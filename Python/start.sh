@@ -1,6 +1,7 @@
-git pull origin master
+# git pull origin master
 while :
-do
+do  
+  rm -f state.p
   ALSA_CARD=CODEC python3 master.py
 done
 

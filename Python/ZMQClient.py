@@ -10,9 +10,9 @@ def client():
     socket = context.socket(zmq.REQ)
     socket.connect ("tcp://localhost:%s" % port)
 
-    socket.send_string ("set_water 0")
-    message = socket.recv()
-    print ("Received reply ", "[", message, "]")
+#    socket.send_string ("set_water 255")
+#    message = socket.recv()
+#    print ("Received reply ", "[", message, "]")
 
     socket.send_string ("set_vfd 255")
     message = socket.recv()
