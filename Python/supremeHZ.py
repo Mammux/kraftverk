@@ -8,7 +8,7 @@ from array import array
 from pygame.mixer import Sound, get_init, pre_init
 import random
 
-SILLY = True
+SILLY = False
 bits = 16
 #the number of channels specified here is NOT 
 #the channels talked about here http://www.pygame.org/docs/ref/mixer.html#pygame.mixer.get_num_channels
@@ -87,7 +87,7 @@ while True:
     s = pygame.sndarray.samples(sounds[0])
     nnn = pygame.sndarray.samples(Note(freq, 0.0))
 
-    print("s: %d nnn: %d" % (np.size(s),np.size(nnn)))
+    print("s: %d nnn: %d s[100]: %d" % (np.size(s),np.size(nnn),s[100]))
     
     s[:] = np.concatenate((nnn,nnn))[:np.size(s)]
 
