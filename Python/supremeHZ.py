@@ -3,6 +3,7 @@ from pygame.locals import *
 import zmq
 import math
 import numpy
+from time import sleep
 
 size = (1366, 720)
 
@@ -31,9 +32,7 @@ for frequency in freqs:
   
   for s in range(n_samples):
       t = float(s)/sample_rate    # time in seconds
-   
-      #grab the x-coordinate of the sine wave at a given time, while constraining the sample to what our mixer is set to with "bits"
-      buf[s][0] = int(round(max_sample*math.sin(2*math.pi*frequency*t)))        # left
+      buf[s][0] = int(round(max_sample*math.sin(2*math.pi*frequency*t)))      
 
   sound = pygame.sndarray.make_sound(buf)
   #play once, then loop forever
@@ -61,5 +60,7 @@ while True:
 
   if (freq >= 45 and freq <= 55):
     sounds[freq-45].set_volume(1.0)
+
+  sleep(1)
 
 pygame.quit()
