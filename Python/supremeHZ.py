@@ -2,22 +2,41 @@ import pygame
 from pygame.locals import *
 import zmq
 import math
-import numpy
+import numpy as np
 from time import sleep
+from array import array
+from pygame.mixer import Sound, get_init, pre_init
 
-size = (1366, 720)
-
+SILLY = False
 bits = 16
 #the number of channels specified here is NOT 
 #the channels talked about here http://www.pygame.org/docs/ref/mixer.html#pygame.mixer.get_num_channels
 
-pygame.mixer.pre_init(44100, -bits, 2)
-pygame.init()
-# _display_surf = pygame.display.set_mode(size, pygame.HWSURFACE | pygame.DOUBLEBUF)
+class Note(Sound):
 
-duration = 1.0          # in seconds
-freqs = [45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55]
+    def __init__(self, frequency, volume=.1):
+        self.frequency = frequency
+        Sound.__init__(self, self.build_samples())
+        self.set_volume(volume)
+
+    def build_samples(self):
+        period = int(round(get_init()[0] / self.frequency))
+        samples = array("h", [0] * period)
+        amplitude = 2 ** (abs(get_init()[1]) - 1) - 1
+        for time in range(period):
+            if time < period / 2:
+                samples[time] = amplitude
+            else:
+                samples[time] = -amplitude
+        return samples
+
+pygame.mixer.init(frequency=44100, size=-bits, channels=1)
+pygame.init()
+
+duration = 3.0          # in seconds
+freqs = [45.0, 46.0, 47.0, 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0]
 sounds = []
+freq = 50
 
 #this sounds totally different coming out of a laptop versus coming out of headphones
 
@@ -25,42 +44,49 @@ sample_rate = 44100
 n_samples = int(round(duration*sample_rate))
 
 #setup our numpy array to handle 16 bit ints, which is what we set our mixer to expect with "bits" up above
-buf = numpy.zeros((n_samples, 2), dtype = numpy.int16)
-max_sample = 2**(bits - 1) - 1
 
 for frequency in freqs:
-  
-  for s in range(n_samples):
-      t = float(s)/sample_rate    # time in seconds
-      buf[s][0] = int(round(max_sample*math.sin(2*math.pi*frequency*t)))      
 
-  sound = pygame.sndarray.make_sound(buf)
+  n = Note(frequency, 0.0)
+
+  print("generating %f", frequency)  
+
   #play once, then loop forever
-  sound.play(loops = -1)
-  sound.set_volume(0.0)
-  sounds.append(sound)
+  n.play(loops = -1)
+  if(frequency == 50.0):
+    n.set_volume(1.0)
+  else:
+    n.set_volume(0.0)
+
+  sounds.append(n)
 
 print(sounds)
 
-port = 5556
-context = zmq.Context()
-socket = context.socket(zmq.REQ)
-socket.connect ("tcp://localhost:%s" % port)
+sleep(5)
 
-print ("Connecting to server with port %s" % port)
+if (not SILLY):
+  port = 5556
+  context = zmq.Context()
+  socket = context.socket(zmq.REQ)
+  socket.connect ("tcp://localhost:%s" % port)
+
+  print ("Connecting to server with port %s" % port)
 
 while True:
-  socket.send_string("get_hz_raw")
-  freq = int(socket.recv())
+  if (not SILLY):
+    socket.send_string("get_hz_raw")
+    freq = int(socket.recv())
   print(freq)
 
 # Decay
   for s in sounds:
+    print("Snd: %s Vol: %f" % (s, s.get_volume()))
     s.set_volume(max(0.0, s.get_volume()*0.9))
 
   if (freq >= 45 and freq <= 55):
+    print ("Turning up %d" % (freq-45))
     sounds[freq-45].set_volume(1.0)
 
   sleep(1)
 
-pygame.quit()
+
