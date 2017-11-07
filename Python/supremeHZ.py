@@ -35,7 +35,8 @@ pygame.mixer.init(frequency=44100, size=-bits, channels=1)
 pygame.init()
 
 duration = 3.0          # in seconds
-freqs = [45.0, 46.0, 47.0, 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0]
+freqs=[50.0]
+# freqs = [45.0, 46.0, 47.0, 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0]
 sounds = []
 freq = 52.5
 
@@ -56,7 +57,6 @@ for frequency in freqs:
   sounds.append(n)
 
 print(sounds)
-
 
 if (not SILLY):
   port = 5556
@@ -81,18 +81,18 @@ while True:
 ##    print ("Turning up %d" % (freq-45))
 ##    sounds[freq-45].set_volume(1.0)
 
-    print("f: %f" % frequency)
+    print("f: %f" % freq)
 
     sounds[0].set_volume(1.0)
     s = pygame.sndarray.samples(sounds[0])
-    nnn = pygame.sndarray.samples(Note(frequency, 0.0))
+    nnn = pygame.sndarray.samples(Note(freq, 0.0))
 
     print("s: %d nnn: %d" % (np.size(s),np.size(nnn)))
     
     s[:] = np.concatenate((nnn,nnn))[:np.size(s)]
 
-    frequency = frequency + random.random() - 0.5
+    if SILLY: freq = freq + random.random() - 0.5
 
-  sleep(3)
+    sleep(3)
 
 
