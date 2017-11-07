@@ -16,7 +16,7 @@ import sys
 freq = 50.0
 fs = 44100
 length = 50
-actualFreq = 0.0
+actualFreq = 50.0
 
 port = 5556
 context = zmq.Context()
@@ -37,6 +37,7 @@ while True:
   if (freq != actualFreq):
     actualFreq = (actualFreq * 9 + freq) / 10
     newstuff = hzData(16384, fs, length,actualFreq)
+    print(newstuff)
     snd[:] = newstuff
   
     # sd.play(stuff,loop=True)
