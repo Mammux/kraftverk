@@ -59,7 +59,10 @@ def server(state):
         if (tokens[0] == b"get_hz"):
             socket.send_string("Svar fra master, %f Hz på port %s" % (state['freq'], port))
         elif (tokens[0] == b"get_hz_raw"):
-            socket.send_string("%f" % (state['freq']))
+            if (state['transformer_on']):
+              socket.send_string("%f" % (state['freq']))
+            else:
+              socket.send_string("0.0")
         elif (tokens[0] == b"set_hz_bump" and len(tokens) == 2):
             state['freq_bump'] = int(tokens[1])
             socket.send_string("Svar fra master, har satt %d Hz bump på port %s" % (state['freq_bump'], port))

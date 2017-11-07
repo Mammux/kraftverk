@@ -68,10 +68,14 @@ while True:
       n2 = Note(freqNew, 1.0)
       n2.play(loops = -1, fade_ms=1000)
       n.fadeout(1000);
+      if (freqNew == 0.0):
+        n2.set_volume(0.0)
     else:
       n = Note(freqNew, 1.0)
       n.play(loops = -1, fade_ms=1000)
       n2.fadeout(1000);
+      if (freqNew == 0.0):
+        n.set_volume(0.0)
     freqNew = freq;
     playingOrig = not playingOrig
   sleep(15)
