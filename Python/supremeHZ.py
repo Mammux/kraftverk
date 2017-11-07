@@ -60,6 +60,6 @@ while True:
     s.set_volume(max(0.0, s.get_volume()*0.9))
 
   if (freq >= 45 and freq <= 55):
-    sounds[freq].set_volume(1.0)
+    sounds[freq-45].set_volume(1.0)
 
 pygame.quit()
