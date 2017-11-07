@@ -28,12 +28,17 @@ while True:
   socket.send_string("get_hz_raw")
   freq = int(socket.recv())
 
+  snd = hzData(16384, fs, length,actualFreq)
+  sd.play(snd,loop=True)
+
+
   print ("Updated frequency: %f vs now playing: %f" % (freq, actualFreq))
   if (freq != actualFreq):
     actualFreq = (actualFreq * 9 + freq) / 10
-    stuff[:] = hzData(16384, fs, length,actualFreq)
+    newstuff = hzData(16384, fs, length,actualFreq)
+    snd[:] = newstuff
   
-    sd.play(stuff,loop=True)
+    # sd.play(stuff,loop=True)
 
   sleep(1)
   
