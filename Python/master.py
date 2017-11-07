@@ -57,9 +57,9 @@ def server(state):
         print ("Received request: %s" % (message))
         tokens = message.split()
         if (tokens[0] == b"get_hz"):
-            socket.send_string("Svar fra master, %d Hz på port %s" % (state['freq'], port))
+            socket.send_string("Svar fra master, %f Hz på port %s" % (state['freq'], port))
         elif (tokens[0] == b"get_hz_raw"):
-            socket.send_string("%d" % (state['freq']))
+            socket.send_string("%f" % (state['freq']))
         elif (tokens[0] == b"set_hz_bump" and len(tokens) == 2):
             state['freq_bump'] = int(tokens[1])
             socket.send_string("Svar fra master, har satt %d Hz bump på port %s" % (state['freq_bump'], port))
@@ -110,7 +110,7 @@ def setupState(st):
         'generator_on' : True,
         'dc_on' : True,
         'ac_level' : 255, # From 0 (unpowered) to 255 (max capacity)
-        'freq' : 50,
+        'freq' : 50.0,
         'freq_bump': 0,
         'adj_res' : 0, # 0 to 255 "Innstillingsmotstand", currently not connected
         'shunt' : 0, # 0 to 255 "Shunt", currently not connected
@@ -249,7 +249,7 @@ def handleMessage(msg, msgs, state):
                         updateVFDLights(msgs, state)
                 elif ctrl == 1: # Instillingsmotstand
                         state['adj_res'] = pos
-                        state['freq'] = int(45 + (10 * (state['adj_res']/255)) + state['freq_bump'])
+                        state['freq'] = 47 + (6 * (state['adj_res']/255)) + state['freq_bump']
                         updateFreq(msgs, state)
                 elif ctrl == 2:
                         ch = abs(state['shunt'] - pos)
