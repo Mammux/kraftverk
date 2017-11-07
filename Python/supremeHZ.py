@@ -81,7 +81,7 @@ while True:
 # Decay
   for s in sounds:
     print("Snd: %s Vol: %f" % (s, s.get_volume()))
-    s.set_volume(max(0.0, s.get_volume()*0.9))
+    s.set_volume(0.0)
 
   if (freq >= 45 and freq <= 55):
     print ("Turning up %d" % (freq-45))
