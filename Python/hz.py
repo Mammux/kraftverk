@@ -9,12 +9,13 @@ import sys
 
 # FREQUENCY DATA
 
-def hzData(volume, fs, duration, f):
-  return (np.sin(2*np.pi*np.arange(fs*duration)*f/fs) * volume).astype(np.float32)
+# def hzData(volume, fs, duration, f):
+#   return (np.sin(2*np.pi*np.arange(fs*duration)*f/fs) * volume).astype(np.float32)
+
 
 freq = 50.0
 fs = 44100
-length = 1
+length = 50
 actualFreq = 0.0
 
 port = 5556
