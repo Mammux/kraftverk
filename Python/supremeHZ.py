@@ -48,28 +48,20 @@ n_samples = int(round(duration*sample_rate))
 for frequency in freqs:
 
   n = Note(frequency, 0.0)
-
   print("generating %f", frequency)  
 
-  #play once, then loop forever
   n.play(loops = -1)
-  if(frequency == 50.0):
-    n.set_volume(1.0)
-  else:
-    n.set_volume(0.0)
-
+  n.set_volume(0.0)
   sounds.append(n)
 
 print(sounds)
 
-sleep(5)
 
 if (not SILLY):
   port = 5556
   context = zmq.Context()
   socket = context.socket(zmq.REQ)
   socket.connect ("tcp://localhost:%s" % port)
-
   print ("Connecting to server with port %s" % port)
 
 while True:
@@ -78,7 +70,7 @@ while True:
     freq = int(socket.recv())
   print(freq)
 
-# Decay
+# Silence the nonsense
   for s in sounds:
     print("Snd: %s Vol: %f" % (s, s.get_volume()))
     s.set_volume(0.0)
