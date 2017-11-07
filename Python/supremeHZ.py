@@ -74,6 +74,6 @@ while True:
       n2.fadeout(1000);
     freqNew = freq;
     playingOrig = not playingOrig
-  sleep(3)
+  sleep(15)
 
 
