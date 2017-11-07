@@ -53,6 +53,7 @@ print ("Connecting to server with port %s" % port)
 while True:
   socket.send_string("get_hz_raw")
   freq = int(socket.recv())
+  print(freq)
 
 # Decay
   for s in sounds:
