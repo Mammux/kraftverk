@@ -527,9 +527,9 @@ void handleCtrls()
 
   // Adjust resistance (1)
   int c_2 = analogRead(A1);
-  if (c_2 < 10): c_2 = 10;
-  if (c_2 > 60): c_2 = 60;
-  int v_2 = map(c_2, 10, 60, 0, 255);
+  if (c_2 < 10) { c_2 = 10; }
+  if (c_2 > 60) { c_2 = 60; }
+  int v_2 = mapc_2, 10, 60, 0, 255);
   cmdMessenger.sendCmdStart(control_pos);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)v_2);
@@ -537,8 +537,8 @@ void handleCtrls()
   
   // Shunt (2)
   int c_3 = analogRead(A5);
-  if (c_3 < 15): c_3 = 15;
-  if (c_3 > 50): c_3 = 50;
+  if (c_3 < 15) { c_3 = 15; }
+  if (c_3 > 50) { c_3 = 50; }
   int v_3 = map(c_3, 15, 50, 0, 255);
   cmdMessenger.sendCmdStart(control_pos);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)2);
