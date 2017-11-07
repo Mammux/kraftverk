@@ -6,8 +6,9 @@ import numpy as np
 from time import sleep
 from array import array
 from pygame.mixer import Sound, get_init, pre_init
+import random
 
-SILLY = False
+SILLY = True
 bits = 16
 #the number of channels specified here is NOT 
 #the channels talked about here http://www.pygame.org/docs/ref/mixer.html#pygame.mixer.get_num_channels
@@ -36,7 +37,7 @@ pygame.init()
 duration = 3.0          # in seconds
 freqs = [45.0, 46.0, 47.0, 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0]
 sounds = []
-freq = 50
+freq = 52.5
 
 #this sounds totally different coming out of a laptop versus coming out of headphones
 
@@ -70,15 +71,28 @@ while True:
     freq = int(socket.recv())
   print(freq)
 
+
 # Silence the nonsense
   for s in sounds:
     print("Snd: %s Vol: %f" % (s, s.get_volume()))
     s.set_volume(0.0)
 
-  if (freq >= 45 and freq <= 55):
-    print ("Turning up %d" % (freq-45))
-    sounds[freq-45].set_volume(1.0)
+##  if (freq >= 45 and freq <= 55):
+##    print ("Turning up %d" % (freq-45))
+##    sounds[freq-45].set_volume(1.0)
 
-  sleep(10)
+    print("f: %f" % frequency)
+
+    sounds[0].set_volume(1.0)
+    s = pygame.sndarray.samples(sounds[0])
+    nnn = pygame.sndarray.samples(Note(frequency, 0.0))
+
+    print("s: %d nnn: %d" % (np.size(s),np.size(nnn)))
+    
+    s[:] = np.concatenate((nnn,nnn))[:np.size(s)]
+
+    frequency = frequency + random.random() - 0.5
+
+  sleep(3)
 
 
