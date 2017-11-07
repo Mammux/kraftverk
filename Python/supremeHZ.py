@@ -87,6 +87,6 @@ while True:
     print ("Turning up %d" % (freq-45))
     sounds[freq-45].set_volume(1.0)
 
-  sleep(1)
+  sleep(10)
 
 
