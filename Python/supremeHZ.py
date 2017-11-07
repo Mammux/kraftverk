@@ -68,7 +68,7 @@ if (not SILLY):
 while True:
   if (not SILLY):
     socket.send_string("get_hz_raw")
-    freq = int(socket.recv())
+    freq = float(socket.recv())
   print(freq)
 
 
