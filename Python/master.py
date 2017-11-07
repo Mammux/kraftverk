@@ -250,7 +250,7 @@ def handleMessage(msg, msgs, state):
                 elif ctrl == 1: # Instillingsmotstand
                         state['adj_res'] = pos
                         state['freq'] = int(45 + (10 * (state['adj_res']/255)) + state['freq_bump'])
-                        updateFrq(msgs, state)
+                        updateFreq(msgs, state)
                 elif ctrl == 2:
                         ch = abs(state['shunt'] - pos)
                         state['shunt'] = pos
@@ -339,6 +339,8 @@ def mainLoop():
                                 sleep(5)
                                 msgs = getMessengers()
                                 break
+                        except NameError:
+                                raise
                         except:
                                 print("Unexpected error:", sys.exc_info()[0])
                                 
