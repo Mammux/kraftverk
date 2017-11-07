@@ -31,7 +31,7 @@ while True:
   print ("Updated frequency: %f vs now playing: %f" % (freq, actualFreq))
   if (freq != actualFreq):
     actualFreq = (actualFreq * 9 + freq) / 10
-    stuff = hzData(16384, fs, length,actualFreq)
+    stuff[:] = hzData(16384, fs, length,actualFreq)
   
     sd.play(stuff,loop=True)
 
