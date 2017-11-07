@@ -9,9 +9,9 @@
 // #define HZ_ARDUINO // OK
 // #define DC_VOLT_ARDUINO // OK
 // #define DC_AMP_ARDUINO // OK
-// #define HUB_ARDUINO
+// #define HUB_ARDUINO // OK
 
-#if defined(WATER_ARDUINO)
+#if defined(WATER_ARDUINO) 
 #include <SoftwareSerial.h>
 #include <Encoder.h>
 
@@ -20,8 +20,11 @@ long oldPosition = -999;
 #endif
 
 #if defined(VFD_ARDUINO)
-#include <DigiPotX9Cxxx.h> // DigiPot
-DigiPot pot(2,3,4);
+// #include <DigiPotX9Cxxx.h> // DigiPot
+// INC U/D CS
+// DigiPot pot(2,3,4);
+#include <X9C.h> // X9C library
+X9C pot;
 #endif
 
 #if defined(HZ_ARDUINO)
@@ -76,20 +79,17 @@ void Error1()
   msgs[0].sendCmd(error, msg);
 }
 
-
 void Error2()
 {
   char* msg = msgs[2].readStringArg();
   msgs[0].sendCmd(error, msg);
 }
 
-
 void Error3()
 {
   char* msg = msgs[3].readStringArg();
   msgs[0].sendCmd(error, msg);
 }
-
 
 void Id1()
 {
@@ -114,8 +114,6 @@ void Id3()
   msgs[0].sendCmdBinArg<uint16_t>((uint16_t)idid);
   msgs[0].sendCmdEnd();
 }
-
-
 
 void ForwardButtonPressed()
 {
@@ -262,7 +260,6 @@ void attachCommandCallbacks()
   cmdMessenger.attach(engage_dc_amp, OnEngageDCAmp);
   cmdMessenger.attach(disengage_dc_amp, OnDisengageDCAmp);
 #endif
-
 }
 
 #if defined(DC_VOLT_ARDUINO)
@@ -288,7 +285,6 @@ void OnDisengageDCAmp()
   digitalWrite(13, HIGH);  
 }
 #endif
-
 
 #if defined(LIGHT_ARDUINO)
 void OnLightOn()
@@ -323,8 +319,10 @@ void OnSetVFD()
   if (level > 255) { level = 255; }
   if (level < 0) { level = 0; }
 #if defined(VFD_ARDUINO) 
-  int str = (int)(98.0-((level/255.0)*6.0));
-  pot.set(str);
+//  int str = (int)(98.0-((level/255.0)*6.0));
+//  pot.set(str);
+  int str = (int)(99.0-((level/255.0)*60.0));
+  pot.setPot(str,False);
 #else
   strength = level;
 #endif
@@ -414,12 +412,20 @@ void setup()
   // Listen on serial connection for messages from the PC
   // 115200 is the max speed on Arduino Uno, Mega, with AT8u2 USB
   // Use 57600 for the Arduino Duemilanove and others with FTDI Serial
-#if defined(WATER_ARDUINO)
+#if defined(WATER_ARDUINO) 
   Serial.begin(2400); // Slow (safe) RS485
 #else
-#if !defined(HUB_ARDUINO)
+#if !defined(HUB_ARDUINO) 
   Serial.begin(57600); 
 #endif
+#endif
+
+#if defined(VFD_ARDUINO)
+// INC U/D CS
+// DigiPot pot(2,3,4);
+
+// CS INC U/D
+  pot.begin(4, 2, 3);
 #endif
 
 #if defined(HUB_ARDUINO)
@@ -499,7 +505,7 @@ void handleCtrls()
   sprintf(debug, "Debug: ctrl a0 %d a1 %d a2 %d a3 %d a4 %d a5 %d", analogRead(A0), analogRead(A1), analogRead(A2), analogRead(A3), analogRead(A4), analogRead(A5));
   cmdMessenger.sendCmd(error, debug);
 
-  // Turbinregulator (0) 0: synker 1: nÃ¸ytral 2: stiger
+  // Turbinregulator (0) 0: synker 1: nøytral 2: stiger
   int c_1_a = analogRead(A0);
   int c_1_b = analogRead(A2);
   if (c_1_a > 512 and c_1_b > 512) {
@@ -507,7 +513,6 @@ void handleCtrls()
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
     cmdMessenger.sendCmdEnd();
-
   } else if (c_1_a < 512) {
     cmdMessenger.sendCmdStart(control_pos);
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
@@ -519,13 +524,53 @@ void handleCtrls()
     cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
     cmdMessenger.sendCmdEnd();
   }
+
+  // Adjust resistance (1)
+  int c_2 = analogRead(A1);
+  if (c_2 < 10): c_2 = 10;
+  if (c_2 > 60): c_2 = 60;
+  int v_2 = map(c_2, 10, 60, 0, 255);
+  cmdMessenger.sendCmdStart(control_pos);
+  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
+  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)v_2);
+  cmdMessenger.sendCmdEnd();
+  
+  // Shunt (2)
+  int c_3 = analogRead(A5);
+  if (c_3 < 15): c_3 = 15;
+  if (c_3 > 50): c_3 = 50;
+  int v_3 = map(c_3, 15, 50, 0, 255);
+  cmdMessenger.sendCmdStart(control_pos);
+  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)2);
+  cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)v_3);
+  cmdMessenger.sendCmdEnd();
+
+  // De-magnetizer (3)
+  int c_4_a = analogRead(A3);
+  int c_4_b = analogRead(A4);
+  if (c_4_a > 512 and c_4_b > 512) {
+    cmdMessenger.sendCmdStart(control_pos);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)3);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)2);
+    cmdMessenger.sendCmdEnd();
+  } else if (c_4_a < 512) { // INNE
+    cmdMessenger.sendCmdStart(control_pos);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)3);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)0);
+    cmdMessenger.sendCmdEnd();
+  } else { // UTE
+    cmdMessenger.sendCmdStart(control_pos);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)3);
+    cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
+    cmdMessenger.sendCmdEnd();
+  }
 }
 #endif
 
 // Loop function
 void loop() 
 {
-#if !defined(HUB_ARDUINO)
+#if !defined(HUB_ARDUINO) 
   timer.run();
   cmdMessenger.feedinSerialData();
 #endif

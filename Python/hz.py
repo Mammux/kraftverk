@@ -3,24 +3,34 @@ import sounddevice as sd
 import numpy as np
 import matplotlib.pylab as plt
 from time import sleep
+import zmq
+import time
+import sys
 
 # FREQUENCY DATA
 
 def hzData(volume, fs, duration, f):
   return (np.sin(2*np.pi*np.arange(fs*duration)*f/fs) * volume).astype(np.float32)
 
+freq = 50
 fs = 44100
 length = 1
-stuff = hzData(16384, fs, length, 60)
 
-sd.play(stuff,loop=True,device='pulse')
-sleep(5)
+while True:
+  port = 5556
+  context = zmq.Context()
+  socket = context.socket(zmq.REQ)
+  socket.connect ("tcp://localhost:%s" % port)
 
-stuff = hzData(16384, fs, length, 50)
-sd.play(stuff,loop=True,device='pulse')
+  print ("Connecting to server with port %s" % port)
 
-sleep(5)
+  socket.send_string("get_hz_raw")
+  freq = int(socket.recv())
 
-stuff = hzData(16384, fs, length, 40)
-sd.play(stuff,loop=True,device='pulse')
+  print ("Updated frequency: %d" % freq)
 
+  stuff = hzData(16384, fs, length, freq)
+  
+  sd.play(stuff,loop=True,mapping=[1],device=4)
+  sleep(1)
+  
