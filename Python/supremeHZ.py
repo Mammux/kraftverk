@@ -8,7 +8,7 @@ from array import array
 from pygame.mixer import Sound, get_init, pre_init
 import random
 
-SILLY = True
+SILLY = False
 bits = 16
 #the number of channels specified here is NOT 
 #the channels talked about here http://www.pygame.org/docs/ref/mixer.html#pygame.mixer.get_num_channels
@@ -74,7 +74,6 @@ while True:
       n2.fadeout(1000);
     freqNew = freq;
     playingOrig = not playingOrig
-  print("dibadoo")
   sleep(3)
 
 
