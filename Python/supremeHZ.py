@@ -85,11 +85,13 @@ while True:
 
     sounds[0].set_volume(1.0)
     s = pygame.sndarray.samples(sounds[0])
-    nnn = pygame.sndarray.samples(Note(freq, 0.0))
+#    nnn = pygame.sndarray.samples(Note(freq, 0.0))
 
-    print("s: %d nnn: %d s[100]: %d" % (np.size(s),np.size(nnn),s[100]))
+#    print("s: %d nnn: %d s[100]: %d" % (np.size(s),np.size(nnn),s[100]))
     
-    s[:] = np.concatenate((nnn,nnn))[:np.size(s)]
+#    s[:] = np.concatenate((nnn,nnn))[:np.size(s)]
+    
+    Note(freq, 0.0).play()
 
     if SILLY: freq = freq + random.random() - 0.5
 
