@@ -249,7 +249,7 @@ def handleMessage(msg, msgs, state):
                         updateVFDLights(msgs, state)
                 elif ctrl == 1: # Instillingsmotstand
                         state['adj_res'] = pos
-                        state['freq'] = 45 + (10 * (state['adj_res']/255)) + state['freq_bump']
+                        state['freq'] = int(45 + (10 * (state['adj_res']/255)) + state['freq_bump'])
                         updateFrq(msgs, state)
                 elif ctrl == 2:
                         ch = abs(state['shunt'] - pos)
