@@ -188,7 +188,7 @@ def updateFreq(msgs, state):
                 print("set_hz {}".format(state['freq']));
 
 def updateDC(msgs, state):
-        if (state['dc_on']):
+        if (state['dc_on'] and state['water'] > 100):
                 [msg.send("engage_dc_volt") for msg in msgs]
                 if __debug__:
                         print("dc_on")
