@@ -322,7 +322,7 @@ void OnSetVFD()
 //  int str = (int)(98.0-((level/255.0)*6.0));
 //  pot.set(str);
   int str = (int)(99.0-((level/255.0)*60.0));
-  pot.setPot(str,False);
+  pot.setPot(str,false);
 #else
   strength = level;
 #endif
@@ -429,7 +429,7 @@ void setup()
 #endif
 
 #if defined(HUB_ARDUINO)
-  Serial.begin(14400); 
+  Serial.begin(9600); 
   Serial1.begin(57600);
   Serial2.begin(57600);
   Serial3.begin(57600);
@@ -529,7 +529,7 @@ void handleCtrls()
   int c_2 = analogRead(A1);
   if (c_2 < 10) { c_2 = 10; }
   if (c_2 > 60) { c_2 = 60; }
-  int v_2 = mapc_2, 10, 60, 0, 255);
+  int v_2 = map(c_2, 10, 60, 0, 255);
   cmdMessenger.sendCmdStart(control_pos);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)1);
   cmdMessenger.sendCmdBinArg<uint16_t>((uint16_t)v_2);
