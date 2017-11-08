@@ -103,7 +103,7 @@ def getMessengers():
     Aports = glob.glob("/dev/serial/by-id/usb-1a86*")
     Bports = glob.glob("/dev/serial/by-id/usb-Arduino*")
     Uports = glob.glob("/dev/serial/by-id/usb-FTDI*") # Handles lower-speed RS-485 ports separately
-    msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=14400),commands) for serial_device in Aports]
+    msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=9600),commands) for serial_device in Aports]
     msgs = [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=14400),commands) for serial_device in Bports]
     msgs += [PyCmdMessenger.CmdMessenger(PyCmdMessenger.ArduinoBoard(serial_device,baud_rate=2400),commands) for serial_device in Uports]
     return msgs
