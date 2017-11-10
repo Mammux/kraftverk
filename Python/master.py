@@ -274,10 +274,10 @@ def handleMessage(msg, msgs, state):
 def initSound():
         global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
 
-        pygame.mixer.init(frequency=44100, size=-16, channels=6, buffer=4096)
-        hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
-        hz_snd.set_volume(0.0)
-        hz_snd.play(loops=-1)
+        # pygame.mixer.init(frequency=44100, size=-16, channels=6, buffer=4096)
+        # hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
+        # hz_snd.set_volume(0.0)
+        # hz_snd.play(loops=-1)
 
         hydro_snd = pygame.mixer.Sound("sounds/hydroelectric_loop.wav")
         hydro_snd.set_volume(0.0)
@@ -301,6 +301,7 @@ def initSound():
 
 # Do some setup, then loop receiving messages and handling changes
 def mainLoop():
+        pygame.mixer.init(frequency=44100, size=-16, channels=6, buffer=4096)
         initSound();
 
         manager = Manager();
@@ -365,6 +366,8 @@ def mainLoop():
                         pickle.dump(tmpState, open("state.p", "wb"))
                         if (not FAIL_EARLY): msgs = getMessengers()
                         prevMsgsTime = time.time()
+                        initSound()
+                        stateCommands(msgs, state)
 
 if __name__ == '__main__':
     mainLoop();

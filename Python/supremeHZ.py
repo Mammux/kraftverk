@@ -21,6 +21,7 @@ class Note(Sound):
         self.set_volume(volume)
 
     def build_samples(self):
+        if (self.frequency == 0.0): return np.zeros(100)
         period = int(round(get_init()[0] / self.frequency))
         samples = array("h", [0] * period)
         amplitude = 2 ** (abs(get_init()[1]) - 1) - 1
