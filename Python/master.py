@@ -20,7 +20,6 @@ creaking_snd = None
 dam_snd = None
 waterfall_snd = None
 waterpipe_snd = None
-hz_snd = None
 
 # For hz sound making
 prevHz = 50
@@ -139,7 +138,7 @@ def setupState(st):
 
 # Separated update methods
 def updateVFDLights(msgs, state):
-        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
+        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd
         
         if (state['transformer_on']):
                 if __debug__:
@@ -199,7 +198,7 @@ def updateDC(msgs, state):
 
 # Updating devices about current state
 def stateCommands(msgs, state):
-        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
+        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd
         global prevHz, prevStrength
 
         updateVFDLights(msgs, state)        
@@ -214,7 +213,7 @@ def stateCommands(msgs, state):
 
 # Take care of a received message from one of the Arduino devices
 def handleMessage(msg, msgs, state):
-        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
+        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd
         
         if msg == None:
                 return;
@@ -230,12 +229,10 @@ def handleMessage(msg, msgs, state):
                 btn = msg[1][0]
                 if btn == 0: # venstre ut
                         if (state['transformer_on']):
-                                hz_snd.fadeout(1000);
-                        state['transformer_on'] = False
+                          state['transformer_on'] = False
                 elif btn == 1: # venstre inn
                         if (not state['transformer_on']):
-                                hz_snd.play(fade_ms=1000);
-                        state['transformer_on'] = True
+                          state['transformer_on'] = True
                 elif btn == 2: # høyre ut
                         state['generator_on'] = False
                 elif btn == 3: # høyre inn
@@ -272,12 +269,7 @@ def handleMessage(msg, msgs, state):
                         updateWater(msgs, state)
 
 def initSound():
-        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd, hz_snd
-
-        # pygame.mixer.init(frequency=44100, size=-16, channels=6, buffer=4096)
-        # hz_snd = pygame.mixer.Sound("sounds/50hz.wav")
-        # hz_snd.set_volume(0.0)
-        # hz_snd.play(loops=-1)
+        global hydro_snd, creaking_snd, dam_snd, waterfall_snd, waterpipe_snd
 
         hydro_snd = pygame.mixer.Sound("sounds/hydroelectric_loop.wav")
         hydro_snd.set_volume(0.0)
